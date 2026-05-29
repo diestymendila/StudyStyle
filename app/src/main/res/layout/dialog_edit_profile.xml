@@ -16,7 +16,8 @@
             android:id="@+id/et_dialog_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:imeOptions="actionNext" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -29,7 +30,8 @@
             android:id="@+id/et_dialog_jurusan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:imeOptions="actionDone" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

@@ -4,62 +4,119 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?android:attr/windowBackground">
+    android:background="@color/background_primary">
 
     <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/brand_primary"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:paddingTop="36dp"
-        android:paddingBottom="24dp">
-
+        android:paddingBottom="16dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tes Gaya Belajar"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Jawab 15 pertanyaan dengan jujur sesuai kebiasaanmu"
-            android:textColor="#CCFFFFFF"
-            android:textSize="12sp" />
-
+            android:layout_marginTop="4dp"
+            android:text="Jawab sesuai kebiasaanmu yang sebenarnya"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary" />
     </LinearLayout>
 
-    <!-- Questions RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_questions"
+    <!-- Content area: loading / error / questions -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingTop="12dp"
-        android:paddingBottom="8dp"
-        android:clipToPadding="false" />
+        android:layout_weight="1">
+
+        <!-- Loading state -->
+        <LinearLayout
+            android:id="@+id/layout_loading_wrap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="visible">
+            <ProgressBar
+                android:id="@+id/progress_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/brand_primary" />
+            <TextView
+                android:id="@+id/tv_loading_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Memuat pertanyaan..."
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary" />
+        </LinearLayout>
+
+        <!-- Error state -->
+        <LinearLayout
+            android:id="@+id/layout_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="32dp"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚠️"
+                android:textSize="40sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gagal memuat pertanyaan"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginTop="12dp" />
+            <Button
+                android:id="@+id/btn_retry_load"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Coba Lagi"
+                style="@style/ButtonSecondary" />
+        </LinearLayout>
+
+        <!-- Questions RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_questions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="4dp"
+            android:paddingBottom="8dp"
+            android:clipToPadding="false"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <!-- Submit button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
-        android:elevation="8dp"
+        android:background="@color/background_primary"
+        android:elevation="6dp"
         android:padding="16dp">
-
         <Button
             android:id="@+id/btn_submit_test"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Lihat Hasil Tes →"
+            android:visibility="gone"
             style="@style/ButtonPrimary" />
-
     </LinearLayout>
 
 </LinearLayout>

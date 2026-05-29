@@ -2,22 +2,10 @@
 <resources>
     <string name="app_name">StudyStyle</string>
     <string name="slogan">Belajar sesuai gaya terbaikmu.</string>
-    <string name="login">Masuk</string>
-    <string name="register">Daftar</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="nama_lengkap">Nama Lengkap</string>
-    <string name="jurusan">Jurusan / Program Studi</string>
-    <string name="konfirmasi_password">Konfirmasi Password</string>
-    <string name="mulai_tes">Mulai Tes</string>
     <string name="home">Beranda</string>
-    <string name="tes">Tes</string>
-    <string name="hasil">Hasil</string>
-    <string name="profil">Profil</string>
-    <string name="keluar">Keluar</string>
-    <string name="dark_mode">Mode Gelap</string>
+    <string name="test">Tes</string>
+    <string name="result">Hasil</string>
+    <string name="profile">Profil</string>
     <string name="no_internet">Tidak ada koneksi internet</string>
-    <string name="refresh">Refresh</string>
-    <string name="ulangi_tes">Ulangi Tes</string>
-    <string name="ke_beranda">Ke Beranda</string>
+    <string name="retry">Coba Lagi</string>
 </resources>

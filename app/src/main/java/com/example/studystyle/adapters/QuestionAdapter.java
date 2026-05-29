@@ -22,62 +22,60 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     private final List<Question> questions;
 
     public QuestionAdapter(Context context, List<Question> questions) {
-        this.context = context;
+        this.context   = context;
         this.questions = questions;
     }
 
-    @NonNull
-    @Override
+    @NonNull @Override
     public QuestionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_question, parent, false);
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.item_question, parent, false);
         return new QuestionViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
-        Question question = questions.get(position);
+    public void onBindViewHolder(@NonNull QuestionViewHolder h, int position) {
+        Question q = questions.get(position);
 
-        holder.tvNumber.setText(String.format("Pertanyaan %d", position + 1));
-        holder.tvQuestion.setText(question.getQuestionText());
-        holder.rbOptionA.setText(question.getOptionA());
-        holder.rbOptionB.setText(question.getOptionB());
-        holder.rbOptionC.setText(question.getOptionC());
+        h.tvNumber.setText(String.format("Pertanyaan %d", position + 1));
+        h.tvQuestion.setText(q.getQuestionText());
+        h.rbA.setText(q.getOptionA());
+        h.rbB.setText(q.getOptionB());
+        h.rbC.setText(q.getOptionC());
 
-        // Restore selection state
-        holder.rgOptions.setOnCheckedChangeListener(null);
-        switch (question.getSelectedOption()) {
-            case 1: holder.rgOptions.check(R.id.rb_option_a); break;
-            case 2: holder.rgOptions.check(R.id.rb_option_b); break;
-            case 3: holder.rgOptions.check(R.id.rb_option_c); break;
-            default: holder.rgOptions.clearCheck(); break;
+        // Clear listener sebelum set checked agar tidak trigger loop
+        h.rgOptions.setOnCheckedChangeListener(null);
+        h.rgOptions.clearCheck();
+
+        switch (q.getSelectedOption()) {
+            case 1: h.rgOptions.check(R.id.rb_option_a); break;
+            case 2: h.rgOptions.check(R.id.rb_option_b); break;
+            case 3: h.rgOptions.check(R.id.rb_option_c); break;
         }
 
-        holder.rgOptions.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.rb_option_a) question.setSelectedOption(1);
-            else if (checkedId == R.id.rb_option_b) question.setSelectedOption(2);
-            else if (checkedId == R.id.rb_option_c) question.setSelectedOption(3);
-            else question.setSelectedOption(0);
+        h.rgOptions.setOnCheckedChangeListener((group, checkedId) -> {
+            if      (checkedId == R.id.rb_option_a) q.setSelectedOption(1);
+            else if (checkedId == R.id.rb_option_b) q.setSelectedOption(2);
+            else if (checkedId == R.id.rb_option_c) q.setSelectedOption(3);
+            else                                     q.setSelectedOption(0);
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return questions.size();
-    }
+    @Override public int getItemCount() { return questions.size(); }
 
-    public static class QuestionViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNumber, tvQuestion;
-        RadioGroup rgOptions;
-        RadioButton rbOptionA, rbOptionB, rbOptionC;
+    static class QuestionViewHolder extends RecyclerView.ViewHolder {
+        TextView    tvNumber, tvQuestion;
+        RadioGroup  rgOptions;
+        RadioButton rbA, rbB, rbC;
 
-        public QuestionViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvNumber = itemView.findViewById(R.id.tv_question_number);
-            tvQuestion = itemView.findViewById(R.id.tv_question_text);
-            rgOptions = itemView.findViewById(R.id.rg_options);
-            rbOptionA = itemView.findViewById(R.id.rb_option_a);
-            rbOptionB = itemView.findViewById(R.id.rb_option_b);
-            rbOptionC = itemView.findViewById(R.id.rb_option_c);
+        QuestionViewHolder(@NonNull View v) {
+            super(v);
+            tvNumber   = v.findViewById(R.id.tv_question_number);
+            tvQuestion = v.findViewById(R.id.tv_question_text);
+            rgOptions  = v.findViewById(R.id.rg_options);
+            rbA = v.findViewById(R.id.rb_option_a);
+            rbB = v.findViewById(R.id.rb_option_b);
+            rbC = v.findViewById(R.id.rb_option_c);
         }
     }
 }

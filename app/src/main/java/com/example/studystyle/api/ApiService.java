@@ -6,15 +6,13 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface ApiService {
-
-    // Get random quote
+    // Quotable API - random quote
     @GET("random")
     Call<Quote> getRandomQuote();
 
-    // Get quotes by tag
+    // Quotable API - multiple quotes sekaligus
     @GET("quotes")
-    Call<QuoteResponse> getQuotesByTag(
-            @Query("tags") String tags,
+    Call<QuoteResponse> getMultipleQuotes(
             @Query("limit") int limit
     );
 }

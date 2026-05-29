@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="3dp"
-    app:cardBackgroundColor="?attr/colorSurface">
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/background_card">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,13 +15,11 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Decorative left accent bar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Accent bar -->
             <View
                 android:layout_width="4dp"
                 android:layout_height="match_parent"
@@ -35,32 +33,26 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <!-- Quote mark -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="\u201C"
-                    android:textSize="24sp"
+                    android:textSize="22sp"
                     android:textColor="@color/brand_primary"
-                    android:alpha="0.6"
-                    android:lineSpacingMultiplier="0.5" />
+                    android:alpha="0.5" />
 
-                <!-- Quote content -->
                 <TextView
                     android:id="@+id/tv_item_quote_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Quote text goes here..."
                     android:textSize="14sp"
                     android:textColor="@color/text_primary"
                     android:lineSpacingMultiplier="1.6"
                     android:fontFamily="serif"
                     android:textStyle="italic" />
-
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Divider -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -68,39 +60,13 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="10dp" />
 
-        <!-- Author row -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_item_quote_author"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <View
-                android:layout_width="24dp"
-                android:layout_height="2dp"
-                android:background="@color/brand_primary"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:id="@+id/tv_item_quote_author"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="— Author"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/brand_primary" />
-
-            <!-- Refresh icon hint -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🔄"
-                android:textSize="14sp"
-                android:alpha="0.5" />
-
-        </LinearLayout>
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/brand_primary" />
 
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>

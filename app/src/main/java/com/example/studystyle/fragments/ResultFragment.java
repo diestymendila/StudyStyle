@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -19,18 +19,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studystyle.R;
+import com.example.studystyle.adapters.BookAdapter;
 import com.example.studystyle.adapters.HistoryAdapter;
+import com.example.studystyle.api.ApiClient;
 import com.example.studystyle.background.BackgroundTask;
 import com.example.studystyle.background.ExecutorManager;
 import com.example.studystyle.database.DatabaseHelper;
+import com.example.studystyle.models.BookItem;
+import com.example.studystyle.models.BookSearchResponse;
 import com.example.studystyle.models.Result;
 import com.example.studystyle.utils.Constants;
+import com.example.studystyle.utils.NetworkUtil;
 import com.example.studystyle.utils.PreferenceManager;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,185 +44,274 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ResultFragment extends Fragment {
 
     private PreferenceManager prefs;
     private TextView tvResultTitle, tvResultDesc, tvKelebihan, tvKekurangan;
     private TextView tvVisualPct, tvAuditoryPct, tvKinestetikPct;
     private PieChart pieChart;
-    private RecyclerView rvHistory;
     private HistoryAdapter historyAdapter;
+    private BookAdapter bookAdapter;
+    private LinearLayout layoutNoHistory;
+    private ProgressBar progressBooks;
+    private TextView tvBooksOffline;
+    private RecyclerView rvBooks;
+    private String currentResultType = "";
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_result, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (getContext() == null) return;
 
         prefs = new PreferenceManager(requireContext());
 
-        tvResultTitle = view.findViewById(R.id.tv_result_title);
-        tvResultDesc = view.findViewById(R.id.tv_result_desc);
-        tvKelebihan = view.findViewById(R.id.tv_kelebihan);
-        tvKekurangan = view.findViewById(R.id.tv_kekurangan);
-        tvVisualPct = view.findViewById(R.id.tv_visual_pct);
-        tvAuditoryPct = view.findViewById(R.id.tv_auditory_pct);
+        tvResultTitle   = view.findViewById(R.id.tv_result_title);
+        tvResultDesc    = view.findViewById(R.id.tv_result_desc);
+        tvKelebihan     = view.findViewById(R.id.tv_kelebihan);
+        tvKekurangan    = view.findViewById(R.id.tv_kekurangan);
+        tvVisualPct     = view.findViewById(R.id.tv_visual_pct);
+        tvAuditoryPct   = view.findViewById(R.id.tv_auditory_pct);
         tvKinestetikPct = view.findViewById(R.id.tv_kinestetik_pct);
-        pieChart = view.findViewById(R.id.pie_chart);
-        rvHistory = view.findViewById(R.id.rv_history);
+        pieChart        = view.findViewById(R.id.pie_chart);
+        layoutNoHistory = view.findViewById(R.id.layout_no_history);
+        progressBooks   = view.findViewById(R.id.progress_books);
+        tvBooksOffline  = view.findViewById(R.id.tv_books_offline);
+        rvBooks         = view.findViewById(R.id.rv_books);
+
+        RecyclerView rvHistory = view.findViewById(R.id.rv_history);
         Button btnRetake = view.findViewById(R.id.btn_retake_test);
-        Button btnHome = view.findViewById(R.id.btn_go_home);
+        Button btnHome   = view.findViewById(R.id.btn_go_home);
 
-        // Get args
+        // Setup history RecyclerView
+        historyAdapter = new HistoryAdapter(requireContext(), new ArrayList<>());
+        rvHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
+        rvHistory.setAdapter(historyAdapter);
+        rvHistory.setNestedScrollingEnabled(false);
+
+        // Setup books RecyclerView
+        bookAdapter = new BookAdapter(requireContext(), new ArrayList<>());
+        rvBooks.setLayoutManager(new LinearLayoutManager(requireContext()));
+        rvBooks.setAdapter(bookAdapter);
+        rvBooks.setNestedScrollingEnabled(false);
+
         Bundle args = getArguments();
-        if (args != null) {
-            String resultType = args.getString(Constants.INTENT_RESULT_TYPE, "");
-            int visual = args.getInt(Constants.INTENT_VISUAL_SCORE, 0);
-            int auditory = args.getInt(Constants.INTENT_AUDITORY_SCORE, 0);
-            int kinestetik = args.getInt(Constants.INTENT_KINESTETIK_SCORE, 0);
+        String type;
+        int visual, auditory, kines;
 
-            displayResult(resultType, visual, auditory, kinestetik);
-            saveResult(resultType, visual, auditory, kinestetik);
-
-            // Save to prefs for home screen
-            prefs.saveLastResult(resultType, visual, auditory, kinestetik);
+        if (args != null && !args.getString(Constants.INTENT_RESULT_TYPE, "").isEmpty()) {
+            type     = args.getString(Constants.INTENT_RESULT_TYPE, "");
+            visual   = args.getInt(Constants.INTENT_VISUAL_SCORE, 0);
+            auditory = args.getInt(Constants.INTENT_AUDITORY_SCORE, 0);
+            kines    = args.getInt(Constants.INTENT_KINESTETIK_SCORE, 0);
+            prefs.saveLastResult(type, visual, auditory, kines);
+            saveResultToDB(type, visual, auditory, kines);
         } else {
-            // Load from prefs (if navigated directly)
-            loadFromPrefs();
+            type     = prefs.getLastResult();
+            visual   = prefs.getLastVisual();
+            auditory = prefs.getLastAuditory();
+            kines    = prefs.getLastKinestetik();
         }
 
-        setupHistory();
+        if (!type.isEmpty()) {
+            currentResultType = type;
+            displayResult(type, visual, auditory, kines);
+            loadBooks(type);
+        } else {
+            showEmptyState(view);
+        }
+
+        loadHistory();
 
         btnRetake.setOnClickListener(v ->
-                Navigation.findNavController(view).navigate(R.id.action_result_to_test));
+                Navigation.findNavController(v).navigate(R.id.action_result_to_test));
         btnHome.setOnClickListener(v ->
-                Navigation.findNavController(view).navigate(R.id.action_result_to_home));
+                Navigation.findNavController(v).navigate(R.id.action_result_to_home));
     }
 
-    private void displayResult(String type, int visual, int auditory, int kinestetik) {
-        int total = visual + auditory + kinestetik;
+    private void showEmptyState(View view) {
+        view.findViewById(R.id.card_chart).setVisibility(View.GONE);
+        view.findViewById(R.id.card_desc).setVisibility(View.GONE);
+        view.findViewById(R.id.tv_header_label).setVisibility(View.GONE);
+        view.findViewById(R.id.tv_books_label).setVisibility(View.GONE);
+        tvResultTitle.setText("Belum Ada Hasil Tes");
+        tvResultTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
+    }
+
+    private void displayResult(String type, int visual, int auditory, int kines) {
+        int total = visual + auditory + kines;
         if (total == 0) return;
 
         float vPct = (visual * 100f) / total;
         float aPct = (auditory * 100f) / total;
-        float kPct = (kinestetik * 100f) / total;
+        float kPct = (kines * 100f) / total;
 
         tvVisualPct.setText(String.format(Locale.getDefault(), "%.0f%%", vPct));
         tvAuditoryPct.setText(String.format(Locale.getDefault(), "%.0f%%", aPct));
         tvKinestetikPct.setText(String.format(Locale.getDefault(), "%.0f%%", kPct));
 
+        int colorRes;
         switch (type) {
             case Constants.STYLE_VISUAL:
+                colorRes = R.color.color_visual;
                 tvResultTitle.setText("🎨 Visual Learner");
-                tvResultTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_visual));
                 tvResultDesc.setText("Kamu belajar paling efektif melalui gambar, diagram, warna, dan representasi visual. Otak kamu sangat aktif memproses informasi secara spasial.");
-                tvKelebihan.setText("✓ Mudah memahami peta, diagram, dan grafik\n✓ Imajinasi dan kreativitas tinggi\n✓ Ingatan visual yang kuat\n✓ Baik dalam desain dan seni");
-                tvKekurangan.setText("✗ Sulit belajar dari penjelasan verbal saja\n✗ Bisa terganggu oleh lingkungan visual yang berantakan\n✗ Kadang terlalu fokus pada penampilan");
+                tvKelebihan.setText("• Mudah memahami peta, diagram, dan grafik\n• Imajinasi dan kreativitas tinggi\n• Ingatan visual yang kuat\n• Baik dalam desain dan seni visual");
+                tvKekurangan.setText("• Sulit belajar dari penjelasan verbal saja\n• Bisa terganggu lingkungan visual berantakan\n• Kadang terlalu fokus pada penampilan");
                 break;
-
             case Constants.STYLE_AUDITORY:
+                colorRes = R.color.color_auditory;
                 tvResultTitle.setText("🎵 Auditori Learner");
-                tvResultTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_auditory));
                 tvResultDesc.setText("Kamu belajar paling efektif melalui suara, musik, dan penjelasan verbal. Kamu sangat baik dalam mendengarkan dan mengingat apa yang didengar.");
-                tvKelebihan.setText("✓ Pandai mendengarkan dan mengikuti instruksi\n✓ Kemampuan komunikasi verbal yang baik\n✓ Mudah mengingat lagu dan percakapan\n✓ Baik dalam debat dan diskusi");
-                tvKekurangan.setText("✗ Mudah terganggu oleh suara bising\n✗ Kesulitan belajar dari teks panjang tanpa penjelasan\n✗ Bisa lebih lambat dalam membaca");
+                tvKelebihan.setText("• Pandai mendengarkan dan mengikuti instruksi\n• Kemampuan komunikasi verbal yang baik\n• Mudah mengingat lagu dan percakapan\n• Baik dalam debat dan diskusi kelompok");
+                tvKekurangan.setText("• Mudah terganggu oleh suara bising\n• Kesulitan belajar dari teks panjang\n• Bisa lebih lambat dalam membaca mandiri");
                 break;
-
-            default: // Kinestetik
+            default:
+                colorRes = R.color.color_kinestetik;
                 tvResultTitle.setText("⚡ Kinestetik Learner");
-                tvResultTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_kinestetik));
                 tvResultDesc.setText("Kamu belajar paling efektif melalui pengalaman langsung, gerakan, dan praktik. Kamu butuh 'menyentuh' dan merasakan materi untuk benar-benar memahaminya.");
-                tvKelebihan.setText("✓ Baik dalam keterampilan praktis dan motorik\n✓ Belajar dari pengalaman dengan cepat\n✓ Energi tinggi dan mudah beradaptasi\n✓ Sangat efektif dalam lab dan lapangan");
-                tvKekurangan.setText("✗ Sulit belajar hanya dari membaca atau mendengar\n✗ Perlu banyak istirahat saat belajar teori\n✗ Kadang terlalu impulsif dalam mengambil keputusan");
+                tvKelebihan.setText("• Baik dalam keterampilan praktis dan motorik\n• Belajar dari pengalaman dengan cepat\n• Energi tinggi dan mudah beradaptasi\n• Sangat efektif dalam lab dan praktik lapangan");
+                tvKekurangan.setText("• Sulit belajar hanya dari membaca atau mendengar\n• Perlu banyak istirahat saat belajar teori\n• Kadang terlalu impulsif mengambil keputusan");
                 break;
         }
-
+        tvResultTitle.setTextColor(ContextCompat.getColor(requireContext(), colorRes));
         setupPieChart(vPct, aPct, kPct);
     }
 
-    private void loadFromPrefs() {
-        int visual = prefs.getLastVisual();
-        int auditory = prefs.getLastAuditory();
-        int kinestetik = prefs.getLastKinestetik();
-        String type = prefs.getLastResult();
-        if (!type.isEmpty()) {
-            displayResult(type, visual, auditory, kinestetik);
+    private void setupPieChart(float v, float a, float k) {
+        try {
+            List<PieEntry> entries = new ArrayList<>();
+            if (v > 0) entries.add(new PieEntry(v, "Visual"));
+            if (a > 0) entries.add(new PieEntry(a, "Auditori"));
+            if (k > 0) entries.add(new PieEntry(k, "Kinestetik"));
+            if (entries.isEmpty()) return;
+
+            PieDataSet dataSet = new PieDataSet(entries, "");
+            List<Integer> colors = new ArrayList<>();
+            if (v > 0) colors.add(ContextCompat.getColor(requireContext(), R.color.color_visual));
+            if (a > 0) colors.add(ContextCompat.getColor(requireContext(), R.color.color_auditory));
+            if (k > 0) colors.add(ContextCompat.getColor(requireContext(), R.color.color_kinestetik));
+            dataSet.setColors(colors);
+            dataSet.setValueTextSize(11f);
+            dataSet.setValueTextColor(Color.WHITE);
+            dataSet.setSliceSpace(2f);
+
+            PieData data = new PieData(dataSet);
+            data.setValueFormatter(new PercentFormatter(pieChart));
+
+            pieChart.setData(data);
+            pieChart.setUsePercentValues(true);
+            pieChart.getDescription().setEnabled(false);
+            pieChart.setHoleRadius(48f);
+            pieChart.setTransparentCircleRadius(52f);
+            pieChart.setDrawHoleEnabled(true);
+            pieChart.setHoleColor(Color.TRANSPARENT);
+            pieChart.setDrawEntryLabels(false);
+            pieChart.getLegend().setEnabled(true);
+            pieChart.getLegend().setTextSize(12f);
+            pieChart.getLegend().setTextColor(
+                    ContextCompat.getColor(requireContext(), R.color.text_primary));
+            pieChart.setExtraOffsets(5, 5, 5, 5);
+            pieChart.animateY(1000, Easing.EaseInOutQuad);
+            pieChart.invalidate();
+        } catch (Exception e) {
+            pieChart.setVisibility(View.GONE);
         }
     }
 
-    private void setupPieChart(float v, float a, float k) {
-        List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(v, "Visual"));
-        entries.add(new PieEntry(a, "Auditori"));
-        entries.add(new PieEntry(k, "Kinestetik"));
+    private void loadBooks(String resultType) {
+        if (!isAdded() || getContext() == null) return;
 
-        PieDataSet dataSet = new PieDataSet(entries, "");
-        dataSet.setColors(
-                ContextCompat.getColor(requireContext(), R.color.color_visual),
-                ContextCompat.getColor(requireContext(), R.color.color_auditory),
-                ContextCompat.getColor(requireContext(), R.color.color_kinestetik)
-        );
-        dataSet.setValueTextSize(12f);
-        dataSet.setValueTextColor(Color.WHITE);
-        dataSet.setSliceSpace(3f);
+        if (!NetworkUtil.isConnected(requireContext())) {
+            tvBooksOffline.setVisibility(View.VISIBLE);
+            rvBooks.setVisibility(View.GONE);
+            progressBooks.setVisibility(View.GONE);
+            return;
+        }
 
-        PieData data = new PieData(dataSet);
-        pieChart.setData(data);
-        pieChart.setUsePercentValues(true);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setHoleRadius(50f);
-        pieChart.setTransparentCircleRadius(55f);
-        pieChart.setDrawHoleEnabled(true);
-        pieChart.setHoleColor(Color.TRANSPARENT);
-        pieChart.getLegend().setEnabled(true);
-        pieChart.getLegend().setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
-        pieChart.animateY(1200, Easing.EaseInOutQuad);
-        pieChart.invalidate();
-    }
+        progressBooks.setVisibility(View.VISIBLE);
+        tvBooksOffline.setVisibility(View.GONE);
+        rvBooks.setVisibility(View.GONE);
 
-    private void saveResult(String type, int visual, int auditory, int kinestetik) {
-        String date = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
-                .format(new Date());
-        int userId = prefs.getUserId();
+        String query;
+        switch (resultType) {
+            case Constants.STYLE_VISUAL:
+                query = Constants.BOOK_QUERY_VISUAL; break;
+            case Constants.STYLE_AUDITORY:
+                query = Constants.BOOK_QUERY_AUDITORY; break;
+            default:
+                query = Constants.BOOK_QUERY_KINESTETIK; break;
+        }
 
-        Result result = new Result(userId, visual, auditory, kinestetik, type, date);
-
-        ExecutorManager.getInstance().execute(new BackgroundTask<Long>() {
+        ApiClient.getBookApiService().searchBooks(
+                query, 5, "title,author_name,first_publish_year,key"
+        ).enqueue(new Callback<BookSearchResponse>() {
             @Override
-            public Long doInBackground() {
-                return DatabaseHelper.getInstance(requireContext()).insertResult(result);
+            public void onResponse(@NonNull Call<BookSearchResponse> call,
+                                   @NonNull Response<BookSearchResponse> response) {
+                if (!isAdded()) return;
+                progressBooks.setVisibility(View.GONE);
+                if (response.isSuccessful() && response.body() != null
+                        && response.body().getDocs() != null
+                        && !response.body().getDocs().isEmpty()) {
+                    List<BookItem> books = response.body().getDocs();
+                    bookAdapter.updateData(books);
+                    rvBooks.setVisibility(View.VISIBLE);
+                } else {
+                    tvBooksOffline.setText("Tidak ada rekomendasi buku saat ini");
+                    tvBooksOffline.setVisibility(View.VISIBLE);
+                }
             }
-
             @Override
-            public void onResult(Long id) {
-                setupHistory(); // refresh history after save
+            public void onFailure(@NonNull Call<BookSearchResponse> call,
+                                  @NonNull Throwable t) {
+                if (!isAdded()) return;
+                progressBooks.setVisibility(View.GONE);
+                tvBooksOffline.setVisibility(View.VISIBLE);
             }
         });
     }
 
-    private void setupHistory() {
+    private void saveResultToDB(String type, int visual, int auditory, int kines) {
+        if (!isAdded()) return;
+        String date = new SimpleDateFormat("dd MMM yyyy, HH:mm",
+                Locale.getDefault()).format(new Date());
+        Result result = new Result(prefs.getUserId(), visual, auditory, kines, type, date);
+        ExecutorManager.getInstance().execute(new BackgroundTask<Long>() {
+            @Override public Long doInBackground() {
+                if (getContext() == null) return -1L;
+                return DatabaseHelper.getInstance(requireContext()).insertResult(result);
+            }
+            @Override public void onResult(Long id) { loadHistory(); }
+        });
+    }
+
+    private void loadHistory() {
+        if (!isAdded() || getContext() == null) return;
         int userId = prefs.getUserId();
         ExecutorManager.getInstance().execute(new BackgroundTask<List<Result>>() {
-            @Override
-            public List<Result> doInBackground() {
-                return DatabaseHelper.getInstance(requireContext()).getResultsByUserId(userId);
+            @Override public List<Result> doInBackground() {
+                if (getContext() == null) return new ArrayList<>();
+                return DatabaseHelper.getInstance(requireContext())
+                        .getResultsByUserId(userId);
             }
-
-            @Override
-            public void onResult(List<Result> results) {
+            @Override public void onResult(List<Result> results) {
                 if (!isAdded()) return;
-                if (historyAdapter == null) {
-                    historyAdapter = new HistoryAdapter(requireContext(), results);
-                    rvHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
-                    rvHistory.setAdapter(historyAdapter);
-                    rvHistory.setNestedScrollingEnabled(false);
+                if (results == null || results.isEmpty()) {
+                    if (layoutNoHistory != null)
+                        layoutNoHistory.setVisibility(View.VISIBLE);
                 } else {
+                    if (layoutNoHistory != null)
+                        layoutNoHistory.setVisibility(View.GONE);
                     historyAdapter.updateData(results);
                 }
             }

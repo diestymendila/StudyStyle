@@ -1,79 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- Light theme (default) -->
     <style name="Theme.StudyStyle" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/brand_primary</item>
         <item name="colorPrimaryDark">@color/brand_primary_dark</item>
-        <item name="colorAccent">@color/brand_accent</item>
+        <item name="colorAccent">@color/brand_primary_light</item>
+        <item name="colorSurface">@color/background_card</item>
+        <item name="android:colorBackground">@color/background_primary</item>
         <item name="android:windowBackground">@color/background_primary</item>
         <item name="android:statusBarColor">@color/background_primary</item>
-        <item name="android:navigationBarColor">@color/background_secondary</item>
+        <item name="android:navigationBarColor">@color/nav_background</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="background_primary">@color/background_primary</item>
+        <item name="background_card">@color/background_card</item>
     </style>
 
     <style name="Theme.StudyStyle.Splash" parent="Theme.StudyStyle">
-        <item name="android:windowBackground">@color/brand_primary</item>
-        <item name="android:statusBarColor">@color/brand_primary</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowBackground">@color/brand_primary_dark</item>
+        <item name="android:statusBarColor">@color/brand_primary_dark</item>
     </style>
 
-    <!-- Button Styles -->
     <style name="ButtonPrimary" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/brand_primary</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="backgroundTint">@color/brand_primary_light</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:letterSpacing">0.03</item>
-        <item name="cornerRadius">14dp</item>
-        <item name="android:elevation">4dp</item>
-        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:minHeight">52dp</item>
     </style>
 
     <style name="ButtonSecondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="strokeColor">@color/brand_primary</item>
-        <item name="android:textColor">@color/brand_primary</item>
+        <item name="strokeColor">@color/brand_primary_light</item>
+        <item name="android:textColor">@color/brand_primary_light</item>
         <item name="android:textSize">15sp</item>
-        <item name="cornerRadius">14dp</item>
-        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:minHeight">52dp</item>
     </style>
 
     <style name="ButtonDanger" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="strokeColor">@color/error</item>
         <item name="android:textColor">@color/error</item>
         <item name="android:textSize">15sp</item>
-        <item name="cornerRadius">14dp</item>
-        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:minHeight">52dp</item>
     </style>
 
-    <!-- Input style -->
     <style name="InputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxCornerRadiusTopStart">12dp</item>
         <item name="boxCornerRadiusTopEnd">12dp</item>
         <item name="boxCornerRadiusBottomStart">12dp</item>
         <item name="boxCornerRadiusBottomEnd">12dp</item>
-        <item name="boxStrokeColor">@color/brand_primary</item>
-        <item name="hintTextColor">@color/brand_primary</item>
+        <item name="boxStrokeColor">@color/brand_primary_light</item>
+        <item name="hintTextColor">@color/brand_primary_light</item>
+        <item name="boxBackgroundColor">@color/input_background</item>
     </style>
-
-    <!-- Card style -->
-    <style name="CardDefault" parent="Widget.MaterialComponents.CardView">
-        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
-        <item name="cardElevation">4dp</item>
-        <item name="cardBackgroundColor">@color/background_card</item>
-    </style>
-
-    <!-- Text styles -->
-    <style name="TextHeading">
-        <item name="android:textSize">26sp</item>
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:letterSpacing">-0.02</item>
-    </style>
-
-    <style name="TextSubtitle">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/text_secondary</item>
-        <item name="android:lineSpacingMultiplier">1.4</item>
-    </style>
-
 </resources>

@@ -8,30 +8,38 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.concurrent.TimeUnit;
 
 public class ApiClient {
+    private static Retrofit retrofitQuote = null;
+    private static Retrofit retrofitBooks = null;
 
-    private static Retrofit retrofit = null;
-
-    public static Retrofit getClient() {
-        if (retrofit == null) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(logging)
-                    .connectTimeout(15, TimeUnit.SECONDS)
-                    .readTimeout(15, TimeUnit.SECONDS)
-                    .build();
-
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.BASE_URL)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-        }
-        return retrofit;
+    private static OkHttpClient buildClient() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        return new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .build();
     }
 
     public static ApiService getApiService() {
-        return getClient().create(ApiService.class);
+        if (retrofitQuote == null) {
+            retrofitQuote = new Retrofit.Builder()
+                    .baseUrl(Constants.BASE_URL_QUOTE)
+                    .client(buildClient())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofitQuote.create(ApiService.class);
+    }
+
+    public static BookApiService getBookApiService() {
+        if (retrofitBooks == null) {
+            retrofitBooks = new Retrofit.Builder()
+                    .baseUrl(Constants.BASE_URL_BOOKS)
+                    .client(buildClient())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofitBooks.create(BookApiService.class);
     }
 }
