@@ -30,7 +30,6 @@ public class PreferenceManager {
     public void    setDarkMode(boolean v) { editor.putBoolean(Constants.KEY_DARK_MODE, v).apply(); }
     public boolean isDarkMode()           { return prefs.getBoolean(Constants.KEY_DARK_MODE, false); }
 
-    // Simpan hasil tes dengan key berbasis userId agar tidak hilang saat logout
     public void saveLastResult(String type, int v, int a, int k) {
         int userId = getUserId();
         editor.putString(Constants.KEY_LAST_RESULT     + userId, type)
@@ -39,20 +38,11 @@ public class PreferenceManager {
                 .putInt(Constants.KEY_LAST_KINESTETIK    + userId, k).apply();
     }
 
-    public String getLastResult() {
-        return prefs.getString(Constants.KEY_LAST_RESULT + getUserId(), "");
-    }
-    public int getLastVisual() {
-        return prefs.getInt(Constants.KEY_LAST_VISUAL + getUserId(), 0);
-    }
-    public int getLastAuditory() {
-        return prefs.getInt(Constants.KEY_LAST_AUDITORY + getUserId(), 0);
-    }
-    public int getLastKinestetik() {
-        return prefs.getInt(Constants.KEY_LAST_KINESTETIK + getUserId(), 0);
-    }
+    public String getLastResult()     { return prefs.getString(Constants.KEY_LAST_RESULT + getUserId(), ""); }
+    public int    getLastVisual()     { return prefs.getInt(Constants.KEY_LAST_VISUAL + getUserId(), 0); }
+    public int    getLastAuditory()   { return prefs.getInt(Constants.KEY_LAST_AUDITORY + getUserId(), 0); }
+    public int    getLastKinestetik() { return prefs.getInt(Constants.KEY_LAST_KINESTETIK + getUserId(), 0); }
 
-    // Restore hasil setelah login — ambil dari DB lalu simpan ke prefs
     public void restoreLastResult(String type, int v, int a, int k, int userId) {
         editor.putString(Constants.KEY_LAST_RESULT     + userId, type)
                 .putInt(Constants.KEY_LAST_VISUAL        + userId, v)
@@ -60,7 +50,7 @@ public class PreferenceManager {
                 .putInt(Constants.KEY_LAST_KINESTETIK    + userId, k).apply();
     }
 
-    public void cacheQuote(String content, String author) {
+    public void   cacheQuote(String content, String author) {
         editor.putString(Constants.KEY_CACHED_QUOTE, content)
                 .putString(Constants.KEY_CACHED_QUOTE_AUTHOR, author).apply();
     }
@@ -70,7 +60,13 @@ public class PreferenceManager {
     public void updateName(String n)    { editor.putString(Constants.KEY_USER_NAME, n).apply(); }
     public void updateJurusan(String j) { editor.putString(Constants.KEY_USER_JURUSAN, j).apply(); }
 
-    // Logout: hapus session saja, TIDAK hapus hasil tes (key per userId tetap ada)
+    public String getProfilePhotoPath() {
+        return prefs.getString("profile_photo_" + getUserId(), "");
+    }
+    public void setProfilePhotoPath(String path) {
+        editor.putString("profile_photo_" + getUserId(), path).apply();
+    }
+
     public void clearSession() {
         editor.remove(Constants.KEY_IS_LOGGED_IN)
                 .remove(Constants.KEY_USER_NAME)
@@ -79,6 +75,5 @@ public class PreferenceManager {
                 .remove(Constants.KEY_USER_ID).apply();
     }
 
-    // Hapus semua (untuk uninstall/reset total)
     public void clearAll() { editor.clear().apply(); }
 }

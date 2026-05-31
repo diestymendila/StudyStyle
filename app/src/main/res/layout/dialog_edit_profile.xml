@@ -1,37 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:layout_height="wrap_content">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nama Lengkap"
-        style="@style/InputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_dialog_name"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Foto Profil -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:imeOptions="actionNext" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:hint="Jurusan / Program Studi"
-        style="@style/InputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_dialog_jurusan"
+            <FrameLayout
+                android:layout_width="96dp"
+                android:layout_height="96dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_dialog_avatar"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_person_placeholder"
+                    app:shapeAppearanceOverlay="@style/CircleImageStyle"
+                    app:strokeColor="@color/brand_primary"
+                    app:strokeWidth="2dp" />
+
+                <!-- Badge edit -->
+                <LinearLayout
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_badge_edit"
+                    android:gravity="center"
+                    android:layout_gravity="bottom|end">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="✏️"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- Tombol aksi foto -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_change_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Ganti Foto"
+                    android:textSize="12sp"
+                    android:layout_marginEnd="8dp"
+                    style="@style/ButtonSecondary" />
+
+                <Button
+                    android:id="@+id/btn_remove_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Hapus"
+                    android:textSize="12sp"
+                    style="@style/ButtonDanger" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Nama -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:imeOptions="actionDone" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="Nama Lengkap"
+            android:layout_marginBottom="14dp"
+            style="@style/InputLayout">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_dialog_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:imeOptions="actionNext" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-</LinearLayout>
+        <!-- Jurusan -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Jurusan / Program Studi"
+            style="@style/InputLayout">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_dialog_jurusan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:imeOptions="actionDone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+</ScrollView>
