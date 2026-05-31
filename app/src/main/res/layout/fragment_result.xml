@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_primary">
+    android:background="?attr/background_primary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="Hasil Tes Kamu"
                 android:textSize="13sp"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/text_secondary_color"
                 android:letterSpacing="0.05" />
 
             <TextView
@@ -51,7 +51,7 @@
             android:layout_marginBottom="14dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/background_card"
+            app:cardBackgroundColor="?attr/card_elevated_color"
             xmlns:app="http://schemas.android.com/apk/res-auto">
 
             <LinearLayout
@@ -66,7 +66,7 @@
                     android:text="Distribusi Gaya Belajar"
                     android:textSize="13sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/text_primary_color"
                     android:layout_marginBottom="8dp" />
 
                 <com.github.mikephil.charting.charts.PieChart
@@ -88,7 +88,8 @@
                             android:text="0%" android:textSize="18sp" android:textStyle="bold"
                             android:textColor="@color/color_visual" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Visual" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                            android:text="Visual" android:textSize="11sp"
+                            android:textColor="?attr/text_secondary_color" />
                     </LinearLayout>
 
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
@@ -98,7 +99,8 @@
                             android:text="0%" android:textSize="18sp" android:textStyle="bold"
                             android:textColor="@color/color_auditory" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Auditori" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                            android:text="Auditori" android:textSize="11sp"
+                            android:textColor="?attr/text_secondary_color" />
                     </LinearLayout>
 
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
@@ -108,7 +110,8 @@
                             android:text="0%" android:textSize="18sp" android:textStyle="bold"
                             android:textColor="@color/color_kinestetik" />
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="Kinestetik" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                            android:text="Kinestetik" android:textSize="11sp"
+                            android:textColor="?attr/text_secondary_color" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -125,7 +128,7 @@
             android:layout_marginBottom="14dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/background_card"
+            app:cardBackgroundColor="?attr/card_elevated_color"
             xmlns:app="http://schemas.android.com/apk/res-auto">
 
             <LinearLayout
@@ -139,7 +142,7 @@
                     android:layout_height="wrap_content"
                     android:text="TENTANG KAMU"
                     android:textSize="11sp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/text_secondary_color"
                     android:letterSpacing="0.08"
                     android:layout_marginBottom="8dp" />
 
@@ -148,11 +151,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/text_primary_color"
                     android:lineSpacingMultiplier="1.6" />
 
                 <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@color/divider"
+                    android:background="?attr/divider_color"
                     android:layout_marginTop="14dp" android:layout_marginBottom="14dp" />
 
                 <TextView
@@ -169,7 +172,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="13sp"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/text_primary_color"
                     android:lineSpacingMultiplier="1.7" />
 
                 <TextView
@@ -187,7 +190,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="13sp"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/text_primary_color"
                     android:lineSpacingMultiplier="1.7" />
 
             </LinearLayout>
@@ -202,7 +205,7 @@
             android:text="Riwayat Tes"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary" />
+            android:textColor="?attr/text_primary_color" />
 
         <LinearLayout
             android:id="@+id/layout_no_history"
@@ -217,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:text="Belum ada riwayat tes"
                 android:textSize="13sp"
-                android:textColor="@color/text_secondary" />
+                android:textColor="?attr/text_secondary_color" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -239,9 +242,8 @@
             android:text="Rekomendasi Buku"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary" />
+            android:textColor="?attr/text_primary_color" />
 
-        <!-- Loading buku -->
         <ProgressBar
             android:id="@+id/progress_books"
             android:layout_width="wrap_content"
@@ -252,7 +254,6 @@
             android:indeterminateTint="@color/brand_primary"
             android:visibility="gone" />
 
-        <!-- Offline books state -->
         <TextView
             android:id="@+id/tv_books_offline"
             android:layout_width="match_parent"
@@ -263,7 +264,7 @@
             android:padding="14dp"
             android:text="📡 Rekomendasi buku membutuhkan koneksi internet"
             android:textSize="13sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="?attr/text_secondary_color"
             android:background="@drawable/bg_card_dashed"
             android:gravity="center"
             android:visibility="gone" />

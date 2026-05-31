@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark theme override -->
     <style name="Theme.StudyStyle" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/brand_primary_light</item>
         <item name="colorPrimaryDark">@color/brand_primary</item>
@@ -9,10 +8,18 @@
         <item name="android:colorBackground">@color/dark_surface</item>
         <item name="android:windowBackground">@color/dark_surface</item>
         <item name="android:statusBarColor">@color/dark_surface</item>
-        <item name="android:navigationBarColor">@color/dark_card</item>
+        <item name="android:navigationBarColor">@color/nav_background_dark</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="background_primary">@color/dark_surface</item>
         <item name="background_card">@color/dark_card</item>
+        <!-- Tambahan attr dark -->
+        <item name="text_primary_color">@color/dark_text_primary</item>
+        <item name="text_secondary_color">@color/dark_text_secondary</item>
+        <item name="divider_color">@color/dark_divider</item>
+        <item name="input_bg_color">@color/dark_input_bg</item>
+        <item name="nav_bg_color">@color/nav_background_dark</item>
+        <item name="nav_unselected_color">@color/nav_unselected_dark</item>
+        <item name="card_elevated_color">@color/dark_card_elevated</item>
     </style>
 
     <style name="InputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -22,6 +29,6 @@
         <item name="boxCornerRadiusBottomEnd">12dp</item>
         <item name="boxStrokeColor">@color/brand_primary_light</item>
         <item name="hintTextColor">@color/brand_primary_light</item>
-        <item name="boxBackgroundColor">@color/input_background_dark</item>
+        <item name="boxBackgroundColor">@color/dark_input_bg</item>
     </style>
 </resources>

@@ -2,4 +2,11 @@
 <resources>
     <attr name="background_primary" format="color|reference" />
     <attr name="background_card" format="color|reference" />
+    <attr name="text_primary_color" format="color|reference" />
+    <attr name="text_secondary_color" format="color|reference" />
+    <attr name="divider_color" format="color|reference" />
+    <attr name="input_bg_color" format="color|reference" />
+    <attr name="nav_bg_color" format="color|reference" />
+    <attr name="nav_unselected_color" format="color|reference" />
+    <attr name="card_elevated_color" format="color|reference" />
 </resources>

@@ -2,6 +2,7 @@ package com.example.studystyle.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,13 +93,11 @@ public class ResultFragment extends Fragment {
         Button btnRetake = view.findViewById(R.id.btn_retake_test);
         Button btnHome   = view.findViewById(R.id.btn_go_home);
 
-        // Setup history RecyclerView
         historyAdapter = new HistoryAdapter(requireContext(), new ArrayList<>());
         rvHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvHistory.setAdapter(historyAdapter);
         rvHistory.setNestedScrollingEnabled(false);
 
-        // Setup books RecyclerView
         bookAdapter = new BookAdapter(requireContext(), new ArrayList<>());
         rvBooks.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvBooks.setAdapter(bookAdapter);
@@ -218,8 +217,11 @@ public class ResultFragment extends Fragment {
             pieChart.setDrawEntryLabels(false);
             pieChart.getLegend().setEnabled(true);
             pieChart.getLegend().setTextSize(12f);
-            pieChart.getLegend().setTextColor(
-                    ContextCompat.getColor(requireContext(), R.color.text_primary));
+
+            TypedValue typedValue = new TypedValue();
+            requireContext().getTheme().resolveAttribute(R.attr.text_primary_color, typedValue, true);
+            pieChart.getLegend().setTextColor(typedValue.data);
+
             pieChart.setExtraOffsets(5, 5, 5, 5);
             pieChart.animateY(1000, Easing.EaseInOutQuad);
             pieChart.invalidate();

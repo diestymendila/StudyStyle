@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_primary">
+    android:background="?attr/background_primary">
 
     <!-- Header -->
     <LinearLayout
@@ -21,14 +21,14 @@
             android:text="Tes Gaya Belajar"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary" />
+            android:textColor="?attr/text_primary_color" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Jawab sesuai kebiasaanmu yang sebenarnya"
             android:textSize="13sp"
-            android:textColor="@color/text_secondary" />
+            android:textColor="?attr/text_secondary_color" />
     </LinearLayout>
 
     <!-- Content area: loading / error / questions -->
@@ -57,7 +57,7 @@
                 android:layout_marginTop="12dp"
                 android:text="Memuat pertanyaan..."
                 android:textSize="13sp"
-                android:textColor="@color/text_secondary" />
+                android:textColor="?attr/text_secondary_color" />
         </LinearLayout>
 
         <!-- Error state -->
@@ -80,7 +80,7 @@
                 android:text="Gagal memuat pertanyaan"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/text_primary_color"
                 android:layout_marginTop="12dp" />
             <Button
                 android:id="@+id/btn_retry_load"
@@ -107,7 +107,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_primary"
+        android:background="?attr/background_primary"
         android:elevation="6dp"
         android:padding="16dp">
         <Button
