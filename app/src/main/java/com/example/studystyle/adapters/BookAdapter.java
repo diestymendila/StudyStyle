@@ -1,8 +1,6 @@
 package com.example.studystyle.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +18,21 @@ import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
+    public interface OnBookClickListener {
+        void onBookClick(BookItem book);
+    }
+
     private final Context context;
     private List<BookItem> books;
+    private OnBookClickListener listener;
 
     public BookAdapter(Context context, List<BookItem> books) {
         this.context = context;
         this.books   = books != null ? books : new ArrayList<>();
+    }
+
+    public void setOnBookClickListener(OnBookClickListener listener) {
+        this.listener = listener;
     }
 
     public void updateData(List<BookItem> newBooks) {
@@ -49,13 +56,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         h.tvYear.setText(year);
         h.tvNumber.setText(String.valueOf(position + 1));
 
-        // Buka link buku di browser
+        // Buka bottom sheet, bukan browser
         h.cardBook.setOnClickListener(v -> {
-            String url = book.getBookUrl();
-            if (!url.isEmpty()) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                context.startActivity(intent);
-            }
+            if (listener != null) listener.onBookClick(book);
         });
     }
 

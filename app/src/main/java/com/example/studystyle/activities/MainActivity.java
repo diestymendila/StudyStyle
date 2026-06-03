@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -54,9 +55,13 @@ public class MainActivity extends AppCompatActivity {
             // Hubungkan bottom nav dengan navController
             NavigationUI.setupWithNavController(bottomNav, navController);
 
-            // Override listener agar bisa handle tab Hasil
+            // Override listener agar semua tab bisa berpindah dari halaman manapun
             bottomNav.setOnItemSelectedListener(item -> {
                 int id = item.getItemId();
+
+                // Jika sudah di halaman yang sama, tidak perlu navigate ulang
+                NavDestination current = navController.getCurrentDestination();
+                if (current != null && current.getId() == id) return true;
 
                 if (id == R.id.resultFragment) {
                     String lastResult = prefs.getLastResult();
@@ -66,10 +71,13 @@ public class MainActivity extends AppCompatActivity {
                                 null,
                                 new NavOptions.Builder()
                                         .setPopUpTo(R.id.homeFragment, false)
+                                        .setLaunchSingleTop(true)
                                         .build());
-                        bottomNav.setSelectedItemId(R.id.testFragment);
+                        // Update highlight ke tab Tes
+                        bottomNav.post(() ->
+                                bottomNav.setSelectedItemId(R.id.testFragment));
                     } else {
-                        // Sudah pernah tes → tampilkan hasil dari SharedPreferences
+                        // Sudah pernah tes → tampilkan hasil
                         navController.navigate(R.id.resultFragment,
                                 null,
                                 new NavOptions.Builder()
@@ -80,14 +88,33 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
-                // Tab lain pakai NavigationUI default
-                return NavigationUI.onNavDestinationSelected(item, navController);
+                // Tab Home, Tes, Profile — navigasi normal bersihkan back stack
+                navController.navigate(id,
+                        null,
+                        new NavOptions.Builder()
+                                .setPopUpTo(R.id.homeFragment, false)
+                                .setLaunchSingleTop(true)
+                                .build());
+                return true;
             });
 
-            // Bottom nav SELALU tampil di semua halaman
+            // Sinkronisasi highlight tab saat destination berubah
+            // (misalnya saat btn_go_home ditekan dari ResultFragment)
             navController.addOnDestinationChangedListener(
-                    (controller, destination, arguments) ->
-                            bottomNav.setVisibility(View.VISIBLE));
+                    (controller, destination, arguments) -> {
+                        bottomNav.setVisibility(View.VISIBLE);
+
+                        // Update highlight tab sesuai destination saat ini
+                        int destId = destination.getId();
+                        if (destId == R.id.homeFragment
+                                || destId == R.id.testFragment
+                                || destId == R.id.resultFragment
+                                || destId == R.id.profileFragment) {
+                            if (bottomNav.getSelectedItemId() != destId) {
+                                bottomNav.setSelectedItemId(destId);
+                            }
+                        }
+                    });
         }
     }
 

@@ -1,12 +1,17 @@
 package com.example.studystyle.fragments;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,6 +31,7 @@ import com.example.studystyle.api.ApiClient;
 import com.example.studystyle.background.BackgroundTask;
 import com.example.studystyle.background.ExecutorManager;
 import com.example.studystyle.database.DatabaseHelper;
+import com.example.studystyle.models.BookDetail;
 import com.example.studystyle.models.BookItem;
 import com.example.studystyle.models.BookSearchResponse;
 import com.example.studystyle.models.Result;
@@ -38,7 +44,11 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -103,6 +113,9 @@ public class ResultFragment extends Fragment {
         rvBooks.setAdapter(bookAdapter);
         rvBooks.setNestedScrollingEnabled(false);
 
+        // ✅ Set listener bottom sheet
+        bookAdapter.setOnBookClickListener(this::showBookBottomSheet);
+
         Bundle args = getArguments();
         String type;
         int visual, auditory, kines;
@@ -135,6 +148,117 @@ public class ResultFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_result_to_test));
         btnHome.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_result_to_home));
+    }
+
+    // ✅ Tampilkan bottom sheet detail buku
+    private void showBookBottomSheet(BookItem book) {
+        if (!isAdded() || getContext() == null) return;
+
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
+        View sheetView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.bottom_sheet_book, null);
+        dialog.setContentView(sheetView);
+
+        ImageView ivCover         = sheetView.findViewById(R.id.iv_book_cover);
+        TextView tvTitle          = sheetView.findViewById(R.id.tv_sheet_title);
+        TextView tvAuthor         = sheetView.findViewById(R.id.tv_sheet_author);
+        TextView tvYear           = sheetView.findViewById(R.id.tv_sheet_year);
+        ProgressBar progressSheet = sheetView.findViewById(R.id.progress_sheet);
+        TextView tvLabel          = sheetView.findViewById(R.id.tv_sheet_sinopsis_label);
+        TextView tvSinopsis       = sheetView.findViewById(R.id.tv_sheet_sinopsis);
+        TextView tvNoSinopsis     = sheetView.findViewById(R.id.tv_sheet_no_sinopsis);
+        Button btnOpenWeb         = sheetView.findViewById(R.id.btn_open_web);
+
+        // Isi data dasar yang sudah ada
+        tvTitle.setText(book.getTitle());
+        tvAuthor.setText(book.getAuthor());
+        tvYear.setText(book.getFirstPublishYear() != null
+                ? "Terbit: " + book.getFirstPublishYear() : "");
+
+        // Tombol buka web sebagai fallback
+        btnOpenWeb.setOnClickListener(v -> {
+            String url = book.getBookUrl();
+            if (!url.isEmpty()) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            }
+        });
+
+        // Ambil work ID dari key (format: /works/OL123W)
+        String key = book.getKey();
+        if (key != null && key.startsWith("/works/")) {
+            String workId = key.replace("/works/", "");
+            progressSheet.setVisibility(View.VISIBLE);
+
+            // Fetch detail + sinopsis
+            ApiClient.getBookApiService().getBookDetail(workId)
+                    .enqueue(new Callback<BookDetail>() {
+                        @Override
+                        public void onResponse(@NonNull Call<BookDetail> call,
+                                               @NonNull Response<BookDetail> response) {
+                            if (!isAdded()) return;
+                            progressSheet.setVisibility(View.GONE);
+
+                            if (response.isSuccessful() && response.body() != null) {
+                                BookDetail detail = response.body();
+
+                                // Tampilkan sinopsis
+                                String sinopsis = detail.getDescription();
+                                if (sinopsis != null && !sinopsis.isEmpty()) {
+                                    tvLabel.setVisibility(View.VISIBLE);
+                                    tvSinopsis.setVisibility(View.VISIBLE);
+                                    tvSinopsis.setText(sinopsis);
+                                } else {
+                                    tvNoSinopsis.setVisibility(View.VISIBLE);
+                                }
+
+                                // Load cover di background thread
+                                String coverUrl = detail.getCoverUrl();
+                                if (coverUrl != null) {
+                                    ExecutorManager.getInstance().execute(
+                                            new BackgroundTask<Bitmap>() {
+                                                @Override public Bitmap doInBackground() {
+                                                    return downloadBitmap(coverUrl);
+                                                }
+                                                @Override public void onResult(Bitmap bitmap) {
+                                                    if (bitmap != null && isAdded()) {
+                                                        ivCover.setImageBitmap(bitmap);
+                                                    }
+                                                }
+                                            });
+                                }
+                            } else {
+                                tvNoSinopsis.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<BookDetail> call,
+                                              @NonNull Throwable t) {
+                            if (!isAdded()) return;
+                            progressSheet.setVisibility(View.GONE);
+                            tvNoSinopsis.setVisibility(View.VISIBLE);
+                        }
+                    });
+        } else {
+            tvNoSinopsis.setVisibility(View.VISIBLE);
+        }
+
+        dialog.show();
+    }
+
+    // ✅ Download cover buku
+    private Bitmap downloadBitmap(String urlStr) {
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            return BitmapFactory.decodeStream(is);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private void showEmptyState(View view) {
@@ -246,12 +370,9 @@ public class ResultFragment extends Fragment {
 
         String query;
         switch (resultType) {
-            case Constants.STYLE_VISUAL:
-                query = Constants.BOOK_QUERY_VISUAL; break;
-            case Constants.STYLE_AUDITORY:
-                query = Constants.BOOK_QUERY_AUDITORY; break;
-            default:
-                query = Constants.BOOK_QUERY_KINESTETIK; break;
+            case Constants.STYLE_VISUAL:  query = Constants.BOOK_QUERY_VISUAL; break;
+            case Constants.STYLE_AUDITORY: query = Constants.BOOK_QUERY_AUDITORY; break;
+            default: query = Constants.BOOK_QUERY_KINESTETIK; break;
         }
 
         ApiClient.getBookApiService().searchBooks(
