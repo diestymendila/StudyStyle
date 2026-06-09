@@ -1,11 +1,13 @@
 package com.example.studystyle.utils;
 
 public class Constants {
-    // Quotable API (motivasi)
-    public static final String BASE_URL_QUOTE = "https://api.quotable.io/";
+    // ZenQuotes API (motivasi) — tidak perlu API key
+    public static final String BASE_URL_QUOTE = "https://zenquotes.io/";
 
-    // Open Library API (rekomendasi buku - gratis, unlimited)
-    public static final String BASE_URL_BOOKS = "https://openlibrary.org/";
+    // GetBooksInfo RapidAPI
+    public static final String BASE_URL_BOOKS = "https://getbooksinfo.p.rapidapi.com/";
+    public static final String RAPIDAPI_KEY   = "8bf5456eecmsh25089ea2f19b4ffp175646jsna9b29cd7814d";
+    public static final String RAPIDAPI_HOST  = "getbooksinfo.p.rapidapi.com";
 
     // SharedPreferences
     public static final String PREF_NAME        = "StudyStylePrefs";
@@ -16,8 +18,8 @@ public class Constants {
     public static final String KEY_USER_ID      = "user_id";
     public static final String KEY_DARK_MODE    = "dark_mode";
 
-    // Hasil tes — disimpan per userId agar tidak hilang saat logout
-    public static final String KEY_LAST_RESULT     = "last_result_";    // + userId
+    // Hasil tes
+    public static final String KEY_LAST_RESULT     = "last_result_";
     public static final String KEY_LAST_VISUAL     = "last_visual_";
     public static final String KEY_LAST_AUDITORY   = "last_auditory_";
     public static final String KEY_LAST_KINESTETIK = "last_kinestetik_";
@@ -42,7 +44,7 @@ public class Constants {
     public static final String INTENT_KINESTETIK_SCORE = "kinestetik_score";
 
     // Book search queries per learning style
-    public static final String BOOK_QUERY_VISUAL     = "visual learning mind map";
-    public static final String BOOK_QUERY_AUDITORY   = "auditory learning listening skills";
-    public static final String BOOK_QUERY_KINESTETIK = "kinesthetic learning hands on";
+    public static final String BOOK_QUERY_VISUAL     = "visual learning";
+    public static final String BOOK_QUERY_AUDITORY   = "auditory learning";
+    public static final String BOOK_QUERY_KINESTETIK = "kinesthetic learning";
 }

@@ -1,22 +1,15 @@
 package com.example.studystyle.api;
 
-import com.example.studystyle.models.BookDetail;
-import com.example.studystyle.models.BookSearchResponse;
+import com.example.studystyle.models.BookItem;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
+import java.util.List;
 
 public interface BookApiService {
-    // Search buku
-    @GET("search.json")
-    Call<BookSearchResponse> searchBooks(
-            @Query("q") String query,
-            @Query("limit") int limit,
-            @Query("fields") String fields
-    );
 
-    // Detail buku — sinopsis, cover, dll
-    @GET("works/{workId}.json")
-    Call<BookDetail> getBookDetail(@Path("workId") String workId);
+    // GetBooksInfo API: GET /search?s=<query>
+    // Response: JSON array langsung [ {...}, {...} ]
+    @GET("search")
+    Call<List<BookItem>> searchBooks(@Query("s") String query);
 }

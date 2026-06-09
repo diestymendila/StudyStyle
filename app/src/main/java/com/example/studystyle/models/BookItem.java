@@ -1,32 +1,64 @@
 package com.example.studystyle.models;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.List;
 
 public class BookItem {
+
     @SerializedName("title")
     private String title;
 
-    @SerializedName("author_name")
-    private List<String> authorName;
+    @SerializedName("author")
+    private String author;
 
-    @SerializedName("first_publish_year")
-    private Integer firstPublishYear;
+    @SerializedName("year")
+    private String year;
 
-    @SerializedName("key")
-    private String key;
+    @SerializedName("genre")
+    private String genre;
 
-    public String getTitle() { return title; }
-    public String getAuthor() {
-        if (authorName != null && !authorName.isEmpty()) return authorName.get(0);
-        return "Unknown Author";
+    @SerializedName("synopsis")
+    private String synopsis;
+
+    // GetBooksInfo menggunakan field "image" untuk URL cover
+    @SerializedName("image")
+    private String image;
+
+    // Fallback jika API menggunakan "cover"
+    @SerializedName("cover")
+    private String cover;
+
+    @SerializedName("id")
+    private String id;
+
+    // Fallback: beberapa versi API menggunakan "name" bukan "title"
+    @SerializedName("name")
+    private String name;
+
+    // Fallback: beberapa versi menggunakan "description" bukan "synopsis"
+    @SerializedName("description")
+    private String description;
+
+    public String getTitle() {
+        if (title != null && !title.isEmpty()) return title;
+        if (name  != null && !name.isEmpty())  return name;
+        return "";
     }
-    public Integer getFirstPublishYear() { return firstPublishYear; }
-    public String getKey() { return key; }
 
-    // URL buku di Open Library
-    public String getBookUrl() {
-        if (key != null) return "https://openlibrary.org" + key;
+    public String getAuthor()  { return author   != null ? author   : "Unknown Author"; }
+    public String getYear()    { return year     != null ? year     : ""; }
+    public String getGenre()   { return genre    != null ? genre    : ""; }
+    public String getId()      { return id       != null ? id       : ""; }
+
+    public String getSynopsis() {
+        if (synopsis    != null && !synopsis.isEmpty())    return synopsis;
+        if (description != null && !description.isEmpty()) return description;
+        return "";
+    }
+
+    // Coba "image" dulu (GetBooksInfo), fallback ke "cover"
+    public String getCover() {
+        if (image != null && !image.isEmpty()) return image;
+        if (cover != null && !cover.isEmpty()) return cover;
         return "";
     }
 }

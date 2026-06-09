@@ -36,13 +36,13 @@
                     android:text="Halo 👋"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="?attr/text_primary_color" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Apa yang ingin kamu pelajari hari ini?"
                     android:textSize="13sp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/text_secondary_color"
                     android:layout_marginTop="2dp" />
             </LinearLayout>
 
@@ -128,7 +128,7 @@
                 android:layout_weight="1"
                 android:text="Belum ada hasil tes. Mulai tes sekarang untuk mengetahui gaya belajarmu!"
                 android:textSize="13sp"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/text_secondary_color"
                 android:lineSpacingMultiplier="1.4" />
         </LinearLayout>
 
@@ -152,9 +152,9 @@
             android:text="Motivasi Hari Ini"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary" />
+            android:textColor="?attr/text_primary_color" />
 
-        <!-- Loading quote (hanya satu, tanpa duplikat) -->
+        <!-- Loading quote -->
         <ProgressBar
             android:id="@+id/progress_quote"
             android:layout_width="wrap_content"
@@ -175,7 +175,7 @@
             android:visibility="invisible"
             app:cardCornerRadius="16dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/background_card">
+            app:cardBackgroundColor="?attr/background_card">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="\u275D"
+                    android:text="&#10077;"
                     android:textSize="28sp"
                     android:textColor="@color/brand_primary"
                     android:alpha="0.4" />
@@ -193,7 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="13sp"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/text_primary_color"
                     android:lineSpacingMultiplier="1.6"
                     android:fontFamily="serif"
                     android:textStyle="italic"
@@ -201,7 +201,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/divider"
+                    android:background="?attr/divider_color"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="8dp" />
                 <TextView
@@ -225,7 +225,7 @@
             android:visibility="invisible"
             app:cardCornerRadius="16dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/background_card">
+            app:cardBackgroundColor="?attr/background_card">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="\u275D"
+                    android:text="&#10077;"
                     android:textSize="28sp"
                     android:textColor="@color/brand_primary"
                     android:alpha="0.4" />
@@ -243,7 +243,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="13sp"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/text_primary_color"
                     android:lineSpacingMultiplier="1.6"
                     android:fontFamily="serif"
                     android:textStyle="italic"
@@ -251,7 +251,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/divider"
+                    android:background="?attr/divider_color"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="8dp" />
                 <TextView
@@ -275,7 +275,7 @@
             android:visibility="invisible"
             app:cardCornerRadius="16dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/background_card">
+            app:cardBackgroundColor="?attr/background_card">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -284,7 +284,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="\u275D"
+                    android:text="&#10077;"
                     android:textSize="28sp"
                     android:textColor="@color/brand_primary"
                     android:alpha="0.4" />
@@ -293,7 +293,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="13sp"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/text_primary_color"
                     android:lineSpacingMultiplier="1.6"
                     android:fontFamily="serif"
                     android:textStyle="italic"
@@ -301,7 +301,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/divider"
+                    android:background="?attr/divider_color"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="8dp" />
                 <TextView
@@ -334,7 +334,7 @@
                 android:layout_height="wrap_content"
                 android:text="Tidak ada koneksi internet"
                 android:textSize="13sp"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/text_secondary_color"
                 android:layout_marginTop="6dp" />
             <Button
                 android:id="@+id/btn_refresh_quote"

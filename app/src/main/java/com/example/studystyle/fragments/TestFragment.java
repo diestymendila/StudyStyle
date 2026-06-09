@@ -48,13 +48,13 @@ public class TestFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rvQuestions      = view.findViewById(R.id.rv_questions);
-        progressLoading  = view.findViewById(R.id.progress_loading);
+        rvQuestions       = view.findViewById(R.id.rv_questions);
+        progressLoading   = view.findViewById(R.id.progress_loading);
         layoutLoadingWrap = view.findViewById(R.id.layout_loading_wrap);
-        layoutError      = view.findViewById(R.id.layout_error);
-        btnSubmit        = view.findViewById(R.id.btn_submit_test);
-        btnRetryLoad     = view.findViewById(R.id.btn_retry_load);
-        tvLoadingMsg     = view.findViewById(R.id.tv_loading_msg);
+        layoutError       = view.findViewById(R.id.layout_error);
+        btnSubmit         = view.findViewById(R.id.btn_submit_test);
+        btnRetryLoad      = view.findViewById(R.id.btn_retry_load);
+        tvLoadingMsg      = view.findViewById(R.id.tv_loading_msg);
 
         adapter = new QuestionAdapter(requireContext(), questions);
         rvQuestions.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -68,15 +68,12 @@ public class TestFragment extends Fragment {
 
     private void loadQuestions() {
         showLoading();
-
         ExecutorManager.getInstance().execute(new BackgroundTask<List<Question>>() {
             @Override
             public List<Question> doInBackground() {
-                // Simulate slight delay for UX
                 try { Thread.sleep(600); } catch (InterruptedException ignored) {}
                 return buildLocalQuestions();
             }
-
             @Override
             public void onResult(List<Question> result) {
                 if (!isAdded()) return;
@@ -155,81 +152,193 @@ public class TestFragment extends Fragment {
 
     private List<Question> buildLocalQuestions() {
         List<Question> list = new ArrayList<>();
+
+        // 1-5: Cara belajar dasar
         list.add(new Question(1,
                 "Saat belajar materi baru, saya lebih mudah memahami melalui...",
-                "🖼  Diagram, gambar, atau video penjelasan",
-                "🎧  Penjelasan lisan atau rekaman audio",
-                "✋  Langsung mencoba dan mempraktikkan sendiri"));
+                "Diagram, gambar, atau video penjelasan",
+                "Penjelasan lisan atau rekaman audio",
+                "Langsung mencoba dan mempraktikkan sendiri"));
+
         list.add(new Question(2,
                 "Ketika mengingat sesuatu, saya biasanya...",
-                "🖼  Membayangkan gambar atau tulisan di kepala",
-                "🎧  Mengulang dalam hati atau berbicara pelan",
-                "✋  Menggerakkan tubuh atau membuat gerakan tertentu"));
+                "Membayangkan gambar atau tulisan di kepala",
+                "Mengulang dalam hati atau berbicara pelan",
+                "Menggerakkan tubuh atau membuat gerakan tertentu"));
+
         list.add(new Question(3,
-                "Cara menghafal materi yang paling efektif bagi saya...",
-                "🖼  Membuat mind map atau catatan berwarna",
-                "🎧  Membaca keras-keras atau mendengar rekaman",
-                "✋  Menulis berulang-ulang atau berjalan sambil belajar"));
+                "Cara menghafal materi yang paling efektif bagi saya adalah...",
+                "Membuat mind map atau catatan berwarna",
+                "Membaca keras-keras atau mendengar rekaman",
+                "Menulis berulang-ulang atau berjalan sambil belajar"));
+
         list.add(new Question(4,
                 "Di kelas, saya lebih fokus ketika...",
-                "🖼  Dosen menampilkan slide atau tulisan di papan",
-                "🎧  Dosen menjelaskan secara verbal dengan detail",
-                "✋  Ada sesi diskusi, praktek, atau simulasi langsung"));
+                "Dosen menampilkan slide atau tulisan di papan",
+                "Dosen menjelaskan secara verbal dengan detail",
+                "Ada sesi diskusi, praktek, atau simulasi langsung"));
+
         list.add(new Question(5,
                 "Ketika memberi petunjuk arah, saya cenderung...",
-                "🖼  Menggambar peta atau sketsa rute",
-                "🎧  Menjelaskan langkah-langkah secara verbal",
-                "✋  Menunjukkan dengan tangan atau mengajak langsung"));
+                "Menggambar peta atau sketsa rute",
+                "Menjelaskan langkah-langkah secara verbal",
+                "Menunjukkan dengan tangan atau mengajak langsung"));
+
+        // 6-10: Media dan alat belajar
         list.add(new Question(6,
                 "Saat memilih buku teks, saya lebih suka yang...",
-                "🖼  Banyak ilustrasi, grafik, dan diagram berwarna",
-                "🎧  Penjelasan naratif yang detail dan jelas",
-                "✋  Banyak latihan soal dan aktivitas praktis"));
+                "Banyak ilustrasi, grafik, dan diagram berwarna",
+                "Penjelasan naratif yang detail dan jelas",
+                "Banyak latihan soal dan aktivitas praktis"));
+
         list.add(new Question(7,
-                "Cara saya istirahat dari belajar...",
-                "🖼  Menonton video atau melihat gambar menarik",
-                "🎧  Mendengarkan musik atau podcast favorit",
-                "✋  Berolahraga, jalan-jalan, atau aktivitas fisik"));
+                "Cara saya istirahat dari belajar adalah...",
+                "Menonton video atau melihat gambar menarik",
+                "Mendengarkan musik atau podcast favorit",
+                "Berolahraga, jalan-jalan, atau aktivitas fisik"));
+
         list.add(new Question(8,
                 "Saat presentasi, saya biasanya...",
-                "🖼  Mengandalkan slide visual yang menarik",
-                "🎧  Fokus pada penyampaian lisan yang jelas",
-                "✋  Mendemonstrasikan langsung atau ajak interaksi"));
+                "Mengandalkan slide visual yang menarik",
+                "Fokus pada penyampaian lisan yang jelas",
+                "Mendemonstrasikan langsung atau ajak interaksi"));
+
         list.add(new Question(9,
                 "Saat ujian, saya lebih mudah mengingat materi yang...",
-                "🖼  Divisualisasikan atau dibuat dalam bentuk diagram",
-                "🎧  Didengar dari penjelasan dosen atau rekaman",
-                "✋  Pernah dipraktikkan secara langsung"));
+                "Divisualisasikan atau dibuat dalam bentuk diagram",
+                "Didengar dari penjelasan dosen atau rekaman",
+                "Pernah dipraktikkan secara langsung"));
+
         list.add(new Question(10,
                 "Ketika belajar keterampilan baru seperti coding...",
-                "🖼  Membaca panduan dan melihat foto step-by-step",
-                "🎧  Mendengarkan tutorial audio atau video narasi",
-                "✋  Langsung mencoba dan belajar dari kesalahan"));
+                "Membaca panduan dan melihat foto step-by-step",
+                "Mendengarkan tutorial audio atau video narasi",
+                "Langsung mencoba dan belajar dari kesalahan"));
+
+        // 11-15: Catatan dan konsep
         list.add(new Question(11,
                 "Saya paling sering membuat catatan berupa...",
-                "🖼  Bagan, tabel, warna, atau gambar ilustrasi",
-                "🎧  Tulisan poin-poin rangkuman verbal",
-                "✋  Catatan singkat lalu langsung latihan soal"));
+                "Bagan, tabel, warna, atau gambar ilustrasi",
+                "Tulisan poin-poin rangkuman verbal",
+                "Catatan singkat lalu langsung latihan soal"));
+
         list.add(new Question(12,
                 "Ketika memahami konsep abstrak, saya perlu...",
-                "🖼  Melihat representasi visual atau animasinya",
-                "🎧  Mendengar analogi atau penjelasan mendalam",
-                "✋  Melakukan simulasi atau demonstrasi nyata"));
+                "Melihat representasi visual atau animasinya",
+                "Mendengar analogi atau penjelasan mendalam",
+                "Melakukan simulasi atau demonstrasi nyata"));
+
         list.add(new Question(13,
                 "Lingkungan belajar ideal saya adalah...",
-                "🖼  Tempat bersih, rapi, dengan visual inspiratif",
-                "🎧  Tempat tenang, bisa sambil mendengarkan musik",
-                "✋  Fleksibel, bisa bergerak atau berganti posisi"));
+                "Tempat bersih, rapi, dengan visual inspiratif",
+                "Tempat tenang, bisa sambil mendengarkan musik",
+                "Fleksibel, bisa bergerak atau berganti posisi"));
+
         list.add(new Question(14,
                 "Saat membeli produk baru, saya pertama kali...",
-                "🖼  Melihat tampilan fisik dan desainnya",
-                "🎧  Membaca ulasan atau mendengar rekomendasi",
-                "✋  Langsung mencoba dan merasakannya"));
+                "Melihat tampilan fisik dan desainnya",
+                "Membaca ulasan atau mendengar rekomendasi",
+                "Langsung mencoba dan merasakannya"));
+
         list.add(new Question(15,
-                "Metode belajar yang paling saya nikmati...",
-                "🖼  Infografis, video animasi, presentasi visual",
-                "🎧  Kuliah umum, podcast, atau diskusi kelompok",
-                "✋  Field trip, eksperimen, atau proyek langsung"));
+                "Metode belajar yang paling saya nikmati adalah...",
+                "Infografis, video animasi, presentasi visual",
+                "Kuliah umum, podcast, atau diskusi kelompok",
+                "Field trip, eksperimen, atau proyek langsung"));
+
+        // 16-20: Interaksi sosial dan komunikasi
+        list.add(new Question(16,
+                "Ketika berdiskusi kelompok, saya biasanya...",
+                "Membuat sketsa atau diagram untuk menjelaskan ide",
+                "Aktif berbicara dan mendengarkan pendapat orang lain",
+                "Lebih suka demonstrasi atau simulasi langsung"));
+
+        list.add(new Question(17,
+                "Saat menerima instruksi baru, saya lebih mudah memahami jika...",
+                "Instruksi ditulis atau ditampilkan secara visual",
+                "Dijelaskan secara lisan dengan rinci",
+                "Langsung dicontohkan cara melakukannya"));
+
+        list.add(new Question(18,
+                "Cara saya menyampaikan pendapat yang paling nyaman adalah...",
+                "Menulis atau membuat presentasi bergambar",
+                "Berbicara langsung atau melalui diskusi",
+                "Menunjukkan contoh nyata atau mempraktikkannya"));
+
+        list.add(new Question(19,
+                "Ketika menghadapi masalah, saya biasanya...",
+                "Menggambar alur atau membuat diagram masalah",
+                "Membicarakan masalah dengan orang lain",
+                "Langsung mencoba berbagai solusi secara nyata"));
+
+        list.add(new Question(20,
+                "Saya lebih mudah berkonsentrasi ketika...",
+                "Ruangan tertata rapi dan minim gangguan visual",
+                "Suasana tenang tanpa suara berisik",
+                "Bisa bergerak bebas atau mengubah posisi duduk"));
+
+        // 21-25: Teknologi dan media
+        list.add(new Question(21,
+                "Saat belajar menggunakan teknologi, saya lebih suka...",
+                "Aplikasi dengan visualisasi data dan grafik menarik",
+                "Aplikasi dengan narasi audio atau podcast belajar",
+                "Aplikasi interaktif yang bisa dicoba langsung"));
+
+        list.add(new Question(22,
+                "Jenis konten belajar yang paling saya gemari adalah...",
+                "Infografis, video animasi, atau peta konsep",
+                "Audiobook, ceramah, atau diskusi podcast",
+                "Simulasi, game edukasi, atau proyek interaktif"));
+
+        list.add(new Question(23,
+                "Saat menonton video pembelajaran, saya lebih tertarik pada...",
+                "Visualisasi animasi dan grafik yang menarik",
+                "Penjelasan narator yang jelas dan informatif",
+                "Demo langsung atau tutorial step-by-step praktis"));
+
+        list.add(new Question(24,
+                "Ketika mengerjakan tugas kelompok, peran yang saya sukai adalah...",
+                "Membuat desain, layout, atau bagian visual",
+                "Menjadi juru bicara atau menulis narasi",
+                "Mengatur jadwal, praktik, atau demonstrasi"));
+
+        list.add(new Question(25,
+                "Saat belajar bahasa asing, cara yang paling efektif bagi saya...",
+                "Melihat flashcard bergambar dan kartu visual",
+                "Mendengarkan percakapan dan mengulang suara",
+                "Langsung berbicara dan berinteraksi dengan orang"));
+
+        // 26-30: Evaluasi dan preferensi umum
+        list.add(new Question(26,
+                "Jenis ujian yang menurut saya paling adil adalah...",
+                "Ujian berbasis gambar, diagram, atau peta konsep",
+                "Ujian lisan atau wawancara langsung",
+                "Ujian praktik atau demonstrasi keterampilan"));
+
+        list.add(new Question(27,
+                "Saat mempelajari sejarah atau cerita, saya lebih suka...",
+                "Melihat timeline visual, foto, atau peta kejadian",
+                "Mendengar cerita atau narasi yang menarik",
+                "Mengunjungi lokasi atau bermain peran simulasi"));
+
+        list.add(new Question(28,
+                "Ketika saya merasa bosan saat belajar, biasanya karena...",
+                "Terlalu banyak teks tanpa gambar atau visualisasi",
+                "Suasana terlalu sepi atau tidak ada penjelasan lisan",
+                "Terlalu lama duduk diam tanpa aktivitas fisik"));
+
+        list.add(new Question(29,
+                "Cara saya mempersiapkan diri sebelum presentasi adalah...",
+                "Memperbaiki tampilan slide dan elemen visual",
+                "Berlatih berbicara dan mengatur intonasi suara",
+                "Mempersiapkan alat peraga atau demo langsung"));
+
+        list.add(new Question(30,
+                "Secara keseluruhan, saya merasa paling produktif belajar saat...",
+                "Materi disajikan dalam bentuk visual yang menarik",
+                "Ada penjelasan lisan yang detail dan interaktif",
+                "Bisa langsung mempraktikkan apa yang dipelajari"));
+
         return list;
     }
 }

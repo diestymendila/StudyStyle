@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -13,14 +12,81 @@
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/divider"
-        android:backgroundTint="?attr/divider_color" />
+        android:layout_marginBottom="0dp"
+        android:background="@color/brand_primary"
+        android:alpha="0.3" />
+
+    <!-- Header biru dengan cover -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/brand_primary"
+        android:padding="20dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/iv_book_cover"
+            android:layout_width="80dp"
+            android:layout_height="110dp"
+            android:layout_marginEnd="16dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_book_cover_placeholder"
+            android:src="@drawable/ic_book_placeholder" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_sheet_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:lineSpacingMultiplier="1.3" />
+
+            <TextView
+                android:id="@+id/tv_sheet_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textSize="13sp"
+                android:textColor="#DDFFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_sheet_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textSize="12sp"
+                android:textColor="#AAFFFFFF" />
+
+            <!-- Genre badge -->
+            <TextView
+                android:id="@+id/tv_sheet_genre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="11sp"
+                android:textColor="@color/brand_primary"
+                android:background="@drawable/bg_genre_badge_white"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp" />
+
+        </LinearLayout>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="520dp">
+        android:maxHeight="400dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,84 +94,20 @@
             android:orientation="vertical"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
+            android:paddingTop="20dp"
             android:paddingBottom="32dp">
 
-            <!-- Cover + info row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
-
-                <!-- Cover buku -->
-                <ImageView
-                    android:id="@+id/iv_book_cover"
-                    android:layout_width="80dp"
-                    android:layout_height="110dp"
-                    android:layout_marginEnd="16dp"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/bg_book_cover_placeholder"
-                    android:src="@drawable/ic_book_placeholder" />
-
-                <!-- Info buku -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/tv_sheet_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/text_primary_color"
-                        android:lineSpacingMultiplier="1.3" />
-
-                    <TextView
-                        android:id="@+id/tv_sheet_author"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:textSize="13sp"
-                        android:textColor="@color/brand_primary" />
-
-                    <TextView
-                        android:id="@+id/tv_sheet_year"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textSize="12sp"
-                        android:textColor="?attr/text_secondary_color" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Loading sinopsis -->
-            <ProgressBar
-                android:id="@+id/progress_sheet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:indeterminateTint="@color/brand_primary"
-                android:visibility="gone" />
-
-            <!-- Label sinopsis -->
+            <!-- Sinopsis -->
             <TextView
                 android:id="@+id/tv_sheet_sinopsis_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SINOPSIS"
-                android:textSize="11sp"
-                android:textColor="?attr/text_secondary_color"
-                android:letterSpacing="0.08"
-                android:layout_marginBottom="8dp"
-                android:visibility="gone" />
+                android:text="Sinopsis"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="?attr/text_primary_color"
+                android:layout_marginBottom="8dp" />
 
-            <!-- Isi sinopsis -->
             <TextView
                 android:id="@+id/tv_sheet_sinopsis"
                 android:layout_width="match_parent"
@@ -115,7 +117,6 @@
                 android:lineSpacingMultiplier="1.7"
                 android:visibility="gone" />
 
-            <!-- Tidak ada sinopsis -->
             <TextView
                 android:id="@+id/tv_sheet_no_sinopsis"
                 android:layout_width="match_parent"
@@ -124,17 +125,20 @@
                 android:textSize="13sp"
                 android:textColor="?attr/text_secondary_color"
                 android:lineSpacingMultiplier="1.6"
-                android:gravity="center"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:visibility="gone" />
 
-            <!-- Tombol buka di web -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/divider_color"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Tombol buka web -->
             <Button
                 android:id="@+id/btn_open_web"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:text="Buka di Open Library"
                 style="@style/ButtonSecondary" />
 

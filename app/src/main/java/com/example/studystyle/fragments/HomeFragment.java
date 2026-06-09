@@ -17,7 +17,6 @@ import androidx.navigation.Navigation;
 
 import com.example.studystyle.R;
 import com.example.studystyle.api.ApiClient;
-import com.example.studystyle.api.QuoteResponse;
 import com.example.studystyle.models.Quote;
 import com.example.studystyle.utils.NetworkUtil;
 import com.example.studystyle.utils.PreferenceManager;
@@ -35,7 +34,6 @@ public class HomeFragment extends Fragment {
     private CardView cardResult;
     private LinearLayout layoutNoResult;
 
-    // Quote views 1, 2, 3
     private CardView cardQuote1, cardQuote2, cardQuote3;
     private TextView tvContent1, tvAuthor1;
     private TextView tvContent2, tvAuthor2;
@@ -44,16 +42,6 @@ public class HomeFragment extends Fragment {
     private ProgressBar progressQuote;
     private LinearLayout layoutOffline;
     private Button btnRefresh;
-
-    // Fallback offline
-    private static final String[][] FALLBACK = {
-            {"Pendidikan adalah senjata paling ampuh untuk mengubah dunia.", "Nelson Mandela"},
-            {"Investasi dalam pengetahuan selalu memberikan hasil terbaik.", "Benjamin Franklin"},
-            {"Orang yang berhenti belajar adalah orang yang sudah tua.", "Henry Ford"},
-            {"Semakin banyak yang kamu baca, semakin banyak yang kamu ketahui.", "Dr. Seuss"},
-            {"Pendidikan bukan pengisian ember, tetapi penyalaan api.", "W.B. Yeats"},
-            {"Ilmu pengetahuan adalah harta yang selalu mengikuti pemiliknya.", "Peribahasa Arab"},
-    };
 
     @Nullable
     @Override
@@ -121,10 +109,11 @@ public class HomeFragment extends Fragment {
 
     private void loadQuotes() {
         if (!isAdded() || getContext() == null) return;
+
         if (NetworkUtil.isConnected(requireContext())) {
             fetchQuotesFromApi();
         } else {
-            showFallbackQuotes();
+            showOfflineState();
         }
     }
 
@@ -133,50 +122,43 @@ public class HomeFragment extends Fragment {
         hideAllQuoteCards();
         layoutOffline.setVisibility(View.GONE);
 
-        ApiClient.getApiService().getMultipleQuotes(3).enqueue(new Callback<QuoteResponse>() {
+        // ZenQuotes mengembalikan List<Quote> langsung, bukan wrapped object
+        ApiClient.getApiService().getQuotes().enqueue(new Callback<List<Quote>>() {
             @Override
-            public void onResponse(@NonNull Call<QuoteResponse> call,
-                                   @NonNull Response<QuoteResponse> response) {
+            public void onResponse(@NonNull Call<List<Quote>> call,
+                                   @NonNull Response<List<Quote>> response) {
                 if (!isAdded()) return;
                 progressQuote.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null
-                        && response.body().getResults() != null
-                        && !response.body().getResults().isEmpty()) {
-                    List<Quote> quotes = response.body().getResults();
-                    // Cache quote pertama untuk offline
+                        && !response.body().isEmpty()) {
+                    List<Quote> quotes = response.body();
+                    // Cache quote pertama
                     prefs.cacheQuote(quotes.get(0).getContent(), quotes.get(0).getAuthor());
                     showQuoteCards(quotes);
                 } else {
-                    showFallbackQuotes();
+                    showOfflineState();
                 }
             }
 
-            // ✅ PERBAIKAN: ganti Call<Quote> → Call<QuoteResponse>
             @Override
-            public void onFailure(@NonNull Call<QuoteResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<Quote>> call, @NonNull Throwable t) {
                 if (!isAdded()) return;
                 progressQuote.setVisibility(View.GONE);
-                showFallbackQuotes();
+                showOfflineState();
             }
         });
     }
 
-    private void showFallbackQuotes() {
+    private void showOfflineState() {
         if (!isAdded()) return;
         progressQuote.setVisibility(View.GONE);
-
-        // Ambil 3 quote acak berbeda dari fallback
-        int i1 = (int)(Math.random() * FALLBACK.length);
-        int i2 = (i1 + 1) % FALLBACK.length;
-        int i3 = (i1 + 2) % FALLBACK.length;
-
-        setQuoteCard(cardQuote1, tvContent1, tvAuthor1, FALLBACK[i1][0], FALLBACK[i1][1]);
-        setQuoteCard(cardQuote2, tvContent2, tvAuthor2, FALLBACK[i2][0], FALLBACK[i2][1]);
-        setQuoteCard(cardQuote3, tvContent3, tvAuthor3, FALLBACK[i3][0], FALLBACK[i3][1]);
+        hideAllQuoteCards();
+        layoutOffline.setVisibility(View.VISIBLE);
     }
 
     private void showQuoteCards(List<Quote> quotes) {
         if (!isAdded()) return;
+        layoutOffline.setVisibility(View.GONE);
         int size = quotes.size();
         if (size > 0) setQuoteCard(cardQuote1, tvContent1, tvAuthor1,
                 quotes.get(0).getContent(), quotes.get(0).getAuthor());

@@ -4,12 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.studystyle.R;
 import com.example.studystyle.models.BookItem;
 
@@ -49,14 +52,25 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder h, int position) {
         BookItem book = books.get(position);
+
         h.tvTitle.setText(book.getTitle());
         h.tvAuthor.setText(book.getAuthor());
-        String year = book.getFirstPublishYear() != null
-                ? String.valueOf(book.getFirstPublishYear()) : "—";
-        h.tvYear.setText(year);
-        h.tvNumber.setText(String.valueOf(position + 1));
+        h.tvYear.setText(book.getYear());
+        h.tvGenre.setText(book.getGenre().isEmpty() ? "Umum" : book.getGenre());
 
-        // Buka bottom sheet, bukan browser
+        // Load cover dengan Glide
+        if (!book.getCover().isEmpty()) {
+            Glide.with(context)
+                    .load(book.getCover())
+                    .placeholder(R.drawable.ic_book_placeholder)
+                    .error(R.drawable.ic_book_placeholder)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .centerCrop()
+                    .into(h.ivCover);
+        } else {
+            h.ivCover.setImageResource(R.drawable.ic_book_placeholder);
+        }
+
         h.cardBook.setOnClickListener(v -> {
             if (listener != null) listener.onBookClick(book);
         });
@@ -66,14 +80,19 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     static class BookViewHolder extends RecyclerView.ViewHolder {
         CardView cardBook;
-        TextView tvTitle, tvAuthor, tvYear, tvNumber;
+        ImageView ivCover;
+        TextView tvTitle, tvAuthor, tvYear, tvGenre, tvRating, tvFavorite;
+
         BookViewHolder(@NonNull View v) {
             super(v);
-            cardBook = v.findViewById(R.id.card_book);
-            tvTitle  = v.findViewById(R.id.tv_book_title);
-            tvAuthor = v.findViewById(R.id.tv_book_author);
-            tvYear   = v.findViewById(R.id.tv_book_year);
-            tvNumber = v.findViewById(R.id.tv_book_number);
+            cardBook   = v.findViewById(R.id.card_book);
+            ivCover    = v.findViewById(R.id.iv_book_cover);
+            tvTitle    = v.findViewById(R.id.tv_book_title);
+            tvAuthor   = v.findViewById(R.id.tv_book_author);
+            tvYear     = v.findViewById(R.id.tv_book_year);
+            tvGenre    = v.findViewById(R.id.tv_book_genre);
+            tvRating   = v.findViewById(R.id.tv_book_rating);
+            tvFavorite = v.findViewById(R.id.tv_book_favorite);
         }
     }
 }
