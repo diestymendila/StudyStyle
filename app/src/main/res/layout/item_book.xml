@@ -7,8 +7,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:foreground="?attr/selectableItemBackground"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="3dp"
     app:cardBackgroundColor="?attr/card_elevated_color">
 
     <LinearLayout
@@ -21,9 +21,9 @@
         <!-- Cover buku -->
         <ImageView
             android:id="@+id/iv_book_cover"
-            android:layout_width="60dp"
-            android:layout_height="85dp"
-            android:layout_marginEnd="12dp"
+            android:layout_width="70dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="14dp"
             android:scaleType="centerCrop"
             android:background="@drawable/bg_book_cover_placeholder"
             android:src="@drawable/ic_book_placeholder" />
@@ -35,17 +35,19 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <!-- Judul -->
             <TextView
                 android:id="@+id/tv_book_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="?attr/text_primary_color"
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:lineSpacingMultiplier="1.2" />
 
+            <!-- Penulis (warna merah brand) -->
             <TextView
                 android:id="@+id/tv_book_author"
                 android:layout_width="wrap_content"
@@ -56,14 +58,15 @@
                 android:maxLines="1"
                 android:ellipsize="end" />
 
-            <!-- Genre badge + tahun -->
+            <!-- Genre badge + tahun dalam satu baris -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_vertical">
 
+                <!-- Genre badge — background brand_primary, teks putih, fill sisa ruang -->
                 <TextView
                     android:id="@+id/tv_book_genre"
                     android:layout_width="0dp"
@@ -72,13 +75,14 @@
                     android:textSize="11sp"
                     android:textColor="@color/white"
                     android:background="@drawable/bg_genre_badge"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="3dp"
-                    android:paddingBottom="3dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
+                <!-- Tahun di kanan badge -->
                 <TextView
                     android:id="@+id/tv_book_year"
                     android:layout_width="wrap_content"
@@ -89,25 +93,25 @@
 
             </LinearLayout>
 
-            <!-- Rating -->
+            <!-- Rating bintang -->
             <TextView
                 android:id="@+id/tv_book_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:text="★ Belum dirating"
                 android:textSize="11sp"
-                android:textColor="@color/color_kinestetik" />
+                android:textColor="@color/warning" />
 
         </LinearLayout>
 
-        <!-- Favorite icon -->
+        <!-- Ikon favorit (hati) -->
         <TextView
             android:id="@+id/tv_book_favorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="♡"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textColor="?attr/text_secondary_color"
             android:layout_marginStart="8dp"
             android:padding="4dp" />

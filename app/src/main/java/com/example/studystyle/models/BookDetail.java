@@ -1,44 +1,41 @@
 package com.example.studystyle.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class BookDetail {
+
+    // Sinopsis bisa berupa String atau Object {"value": "..."}
+    @SerializedName("description")
+    private JsonElement description;
 
     @SerializedName("title")
     private String title;
 
-    @SerializedName("description")
-    private Object description; // bisa String atau objek {value: "..."}
-
-    @SerializedName("covers")
-    private int[] covers;
-
-    public String getTitle() { return title; }
-
-    // Sinopsis bisa berupa String langsung atau objek {value: "..."}
+    /**
+     * Open Library mengembalikan description sebagai:
+     * - String langsung: "This book is about..."
+     * - Object: {"type": "/type/text", "value": "This book is about..."}
+     */
     public String getDescription() {
-        if (description == null) return null;
-        if (description instanceof String) return (String) description;
-        // Jika berupa objek gson LinkedTreeMap
+        if (description == null) return "";
         try {
-            if (description instanceof com.google.gson.internal.LinkedTreeMap) {
-                Object val = ((com.google.gson.internal.LinkedTreeMap<?, ?>) description).get("value");
-                if (val != null) return val.toString();
+            if (description.isJsonPrimitive()) {
+                return description.getAsString();
+            } else if (description.isJsonObject()) {
+                JsonObject obj = description.getAsJsonObject();
+                if (obj.has("value")) {
+                    return obj.get("value").getAsString();
+                }
             }
-        } catch (Exception ignored) {}
-        return description.toString();
+        } catch (Exception e) {
+            return "";
+        }
+        return "";
     }
 
-    // Cover ID untuk ambil gambar cover
-    public int getCoverId() {
-        if (covers != null && covers.length > 0) return covers[0];
-        return -1;
-    }
-
-    // URL cover buku dari Open Library
-    public String getCoverUrl() {
-        int id = getCoverId();
-        if (id > 0) return "https://covers.openlibrary.org/b/id/" + id + "-M.jpg";
-        return null;
+    public String getTitle() {
+        return title != null ? title : "";
     }
 }

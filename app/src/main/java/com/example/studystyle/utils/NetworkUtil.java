@@ -2,7 +2,10 @@ package com.example.studystyle.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 
 public class NetworkUtil {
 
@@ -11,10 +14,20 @@ public class NetworkUtil {
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm == null) return false;
 
-        NetworkCapabilities caps = cm.getNetworkCapabilities(cm.getActiveNetwork());
-        if (caps == null) return false;
-
-        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Network activeNetwork = cm.getActiveNetwork();
+            if (activeNetwork == null) return false;
+            NetworkCapabilities caps = cm.getNetworkCapabilities(activeNetwork);
+            if (caps == null) return false;
+            // Hapus NET_CAPABILITY_VALIDATED — sering false di emulator/VPN/beberapa device
+            return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    && (caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                    || caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                    || caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
+        } else {
+            // Fallback untuk API < 23
+            NetworkInfo info = cm.getActiveNetworkInfo();
+            return info != null && info.isConnected();
+        }
     }
 }

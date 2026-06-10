@@ -1,6 +1,7 @@
 package com.example.studystyle.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.studystyle.R;
+import com.example.studystyle.activities.BookDetailActivity;
 import com.example.studystyle.models.BookItem;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +59,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         h.tvTitle.setText(book.getTitle());
         h.tvAuthor.setText(book.getAuthor());
         h.tvYear.setText(book.getYear());
-        h.tvGenre.setText(book.getGenre().isEmpty() ? "Umum" : book.getGenre());
+        h.tvGenre.setText(book.getGenre().isEmpty() ? "Education" : book.getGenre());
+        h.tvRating.setText("★ Belum dirating");
 
-        // Load cover dengan Glide
         if (!book.getCover().isEmpty()) {
             Glide.with(context)
                     .load(book.getCover())
@@ -71,8 +74,21 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             h.ivCover.setImageResource(R.drawable.ic_book_placeholder);
         }
 
+        // Klik card → buka BookDetailActivity
         h.cardBook.setOnClickListener(v -> {
+            // Kirim via listener jika ada (opsional), selalu buka Activity
             if (listener != null) listener.onBookClick(book);
+
+            Intent intent = new Intent(context, BookDetailActivity.class);
+            intent.putExtra(BookDetailActivity.EXTRA_BOOK_JSON, new Gson().toJson(book));
+            context.startActivity(intent);
+        });
+
+        // Klik hati favorit
+        h.tvFavorite.setOnClickListener(v -> {
+            h.tvFavorite.setText("♥");
+            h.tvFavorite.setTextColor(
+                    context.getResources().getColor(R.color.brand_primary, context.getTheme()));
         });
     }
 

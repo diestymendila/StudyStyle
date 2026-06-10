@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,8 +21,8 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.studystyle.R;
+import com.example.studystyle.activities.BookDetailActivity;
 import com.example.studystyle.adapters.BookAdapter;
 import com.example.studystyle.adapters.HistoryAdapter;
 import com.example.studystyle.api.ApiClient;
@@ -31,6 +30,7 @@ import com.example.studystyle.background.BackgroundTask;
 import com.example.studystyle.background.ExecutorManager;
 import com.example.studystyle.database.DatabaseHelper;
 import com.example.studystyle.models.BookItem;
+import com.example.studystyle.models.BookSearchResponse;
 import com.example.studystyle.models.Result;
 import com.example.studystyle.utils.Constants;
 import com.example.studystyle.utils.NetworkUtil;
@@ -41,7 +41,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,7 +67,8 @@ public class ResultFragment extends Fragment {
     private RecyclerView rvBooks;
     private String currentResultType = "";
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_result, container, false);
@@ -107,7 +108,13 @@ public class ResultFragment extends Fragment {
         rvBooks.setAdapter(bookAdapter);
         rvBooks.setNestedScrollingEnabled(false);
 
-        bookAdapter.setOnBookClickListener(this::showBookBottomSheet);
+        // Listener klik buku → buka BookDetailActivity
+        bookAdapter.setOnBookClickListener(book -> {
+            if (!isAdded() || getContext() == null) return;
+            Intent intent = new Intent(requireContext(), BookDetailActivity.class);
+            intent.putExtra(BookDetailActivity.EXTRA_BOOK_JSON, new Gson().toJson(book));
+            startActivity(intent);
+        });
 
         Bundle args = getArguments();
         String type;
@@ -141,56 +148,6 @@ public class ResultFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_result_to_test));
         btnHome.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_result_to_home));
-    }
-
-    private void showBookBottomSheet(BookItem book) {
-        if (!isAdded() || getContext() == null) return;
-
-        BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
-        View sheetView = LayoutInflater.from(requireContext())
-                .inflate(R.layout.bottom_sheet_book, null);
-        dialog.setContentView(sheetView);
-
-        ImageView ivCover     = sheetView.findViewById(R.id.iv_book_cover);
-        TextView tvTitle      = sheetView.findViewById(R.id.tv_sheet_title);
-        TextView tvAuthor     = sheetView.findViewById(R.id.tv_sheet_author);
-        TextView tvYear       = sheetView.findViewById(R.id.tv_sheet_year);
-        TextView tvGenre      = sheetView.findViewById(R.id.tv_sheet_genre);
-        TextView tvSinopsis   = sheetView.findViewById(R.id.tv_sheet_sinopsis);
-        TextView tvNoSinopsis = sheetView.findViewById(R.id.tv_sheet_no_sinopsis);
-        Button btnOpenWeb     = sheetView.findViewById(R.id.btn_open_web);
-
-        tvTitle.setText(book.getTitle());
-        tvAuthor.setText("oleh " + book.getAuthor());
-        tvYear.setText(book.getYear().isEmpty() ? "" : "Tahun: " + book.getYear());
-        tvGenre.setText(book.getGenre().isEmpty() ? "Umum" : book.getGenre());
-
-        if (!book.getCover().isEmpty()) {
-            Glide.with(requireContext())
-                    .load(book.getCover())
-                    .placeholder(R.drawable.ic_book_placeholder)
-                    .error(R.drawable.ic_book_placeholder)
-                    .centerCrop()
-                    .into(ivCover);
-        }
-
-        String sinopsis = book.getSynopsis();
-        if (sinopsis != null && !sinopsis.isEmpty()) {
-            tvSinopsis.setText(sinopsis);
-            tvSinopsis.setVisibility(View.VISIBLE);
-            tvNoSinopsis.setVisibility(View.GONE);
-        } else {
-            tvNoSinopsis.setVisibility(View.VISIBLE);
-            tvSinopsis.setVisibility(View.GONE);
-        }
-
-        btnOpenWeb.setOnClickListener(v -> {
-            String url = "https://openlibrary.org/search?q=" +
-                    Uri.encode(book.getTitle());
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-        });
-
-        dialog.show();
     }
 
     private void showEmptyState(View view) {
@@ -307,17 +264,22 @@ public class ResultFragment extends Fragment {
             default:                       query = Constants.BOOK_QUERY_KINESTETIK; break;
         }
 
-        // GetBooksInfo API mengembalikan List<BookItem> langsung (array JSON, bukan wrapped object)
-        ApiClient.getBookApiService().searchBooks(query)
-                .enqueue(new Callback<List<BookItem>>() {
+        String fields = "key,title,author_name,first_publish_year,cover_i,subject";
+
+        ApiClient.getBookApiService().searchBooks(query, 10, fields)
+                .enqueue(new Callback<BookSearchResponse>() {
                     @Override
-                    public void onResponse(@NonNull Call<List<BookItem>> call,
-                                           @NonNull Response<List<BookItem>> response) {
+                    public void onResponse(@NonNull Call<BookSearchResponse> call,
+                                           @NonNull Response<BookSearchResponse> response) {
                         if (!isAdded()) return;
                         progressBooks.setVisibility(View.GONE);
-                        if (response.isSuccessful() && response.body() != null
-                                && !response.body().isEmpty()) {
-                            List<BookItem> books = response.body();
+
+                        if (response.isSuccessful()
+                                && response.body() != null
+                                && response.body().getDocs() != null
+                                && !response.body().getDocs().isEmpty()) {
+
+                            List<BookItem> books = response.body().getDocs();
                             bookAdapter.updateData(books);
                             rvBooks.setVisibility(View.VISIBLE);
                         } else {
@@ -325,8 +287,9 @@ public class ResultFragment extends Fragment {
                             tvBooksOffline.setVisibility(View.VISIBLE);
                         }
                     }
+
                     @Override
-                    public void onFailure(@NonNull Call<List<BookItem>> call,
+                    public void onFailure(@NonNull Call<BookSearchResponse> call,
                                           @NonNull Throwable t) {
                         if (!isAdded()) return;
                         progressBooks.setVisibility(View.GONE);

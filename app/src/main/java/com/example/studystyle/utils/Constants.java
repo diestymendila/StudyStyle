@@ -4,10 +4,10 @@ public class Constants {
     // ZenQuotes API (motivasi) — tidak perlu API key
     public static final String BASE_URL_QUOTE = "https://zenquotes.io/";
 
-    // GetBooksInfo RapidAPI
-    public static final String BASE_URL_BOOKS = "https://getbooksinfo.p.rapidapi.com/";
-    public static final String RAPIDAPI_KEY   = "8bf5456eecmsh25089ea2f19b4ffp175646jsna9b29cd7814d";
-    public static final String RAPIDAPI_HOST  = "getbooksinfo.p.rapidapi.com";
+    // Open Library API — gratis, tanpa API key
+    public static final String BASE_URL_BOOKS        = "https://openlibrary.org/";
+    public static final String BASE_URL_COVERS       = "https://covers.openlibrary.org/";
+    public static final String BASE_URL_BOOKS_WORKS  = "https://openlibrary.org/";
 
     // SharedPreferences
     public static final String PREF_NAME        = "StudyStylePrefs";
@@ -43,8 +43,8 @@ public class Constants {
     public static final String INTENT_AUDITORY_SCORE   = "auditory_score";
     public static final String INTENT_KINESTETIK_SCORE = "kinestetik_score";
 
-    // Book search queries per learning style
-    public static final String BOOK_QUERY_VISUAL     = "visual learning";
-    public static final String BOOK_QUERY_AUDITORY   = "auditory learning";
-    public static final String BOOK_QUERY_KINESTETIK = "kinesthetic learning";
+    // Book search queries per learning style (Open Library)
+    public static final String BOOK_QUERY_VISUAL     = "visual learning study";
+    public static final String BOOK_QUERY_AUDITORY   = "auditory learning music";
+    public static final String BOOK_QUERY_KINESTETIK = "kinesthetic learning activity";
 }

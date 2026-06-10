@@ -4,12 +4,13 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class BookSearchResponse {
-    @SerializedName("docs")
-    private List<BookItem> docs;
 
     @SerializedName("numFound")
     private int numFound;
 
+    @SerializedName("docs")
+    private List<BookItem> docs;
+
+    public int getNumFound() { return numFound; }
     public List<BookItem> getDocs() { return docs; }
-    public int getNumFound()        { return numFound; }
 }

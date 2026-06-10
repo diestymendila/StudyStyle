@@ -1,64 +1,83 @@
 package com.example.studystyle.models;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class BookItem {
+
+    // Open Library: key buku, contoh "/works/OL123W"
+    @SerializedName("key")
+    private String key;
 
     @SerializedName("title")
     private String title;
 
-    @SerializedName("author")
-    private String author;
+    // Open Library: array nama penulis
+    @SerializedName("author_name")
+    private List<String> authorName;
 
-    @SerializedName("year")
-    private String year;
+    // Open Library: tahun terbit pertama
+    @SerializedName("first_publish_year")
+    private Integer firstPublishYear;
 
-    @SerializedName("genre")
-    private String genre;
+    // Open Library: cover ID (gunakan untuk membangun URL cover)
+    @SerializedName("cover_i")
+    private Integer coverId;
 
-    @SerializedName("synopsis")
+    // Open Library: subject/genre
+    @SerializedName("subject")
+    private List<String> subject;
+
+    // Sinopsis — diisi manual setelah fetch detail
     private String synopsis;
 
-    // GetBooksInfo menggunakan field "image" untuk URL cover
-    @SerializedName("image")
-    private String image;
+    // ── Getters ──
 
-    // Fallback jika API menggunakan "cover"
-    @SerializedName("cover")
-    private String cover;
-
-    @SerializedName("id")
-    private String id;
-
-    // Fallback: beberapa versi API menggunakan "name" bukan "title"
-    @SerializedName("name")
-    private String name;
-
-    // Fallback: beberapa versi menggunakan "description" bukan "synopsis"
-    @SerializedName("description")
-    private String description;
+    public String getKey() {
+        if (key == null) return "";
+        // Ambil hanya bagian ID, contoh "/works/OL123W" → "OL123W"
+        return key.replace("/works/", "");
+    }
 
     public String getTitle() {
-        if (title != null && !title.isEmpty()) return title;
-        if (name  != null && !name.isEmpty())  return name;
-        return "";
+        return title != null ? title : "Judul tidak tersedia";
     }
 
-    public String getAuthor()  { return author   != null ? author   : "Unknown Author"; }
-    public String getYear()    { return year     != null ? year     : ""; }
-    public String getGenre()   { return genre    != null ? genre    : ""; }
-    public String getId()      { return id       != null ? id       : ""; }
+    public String getAuthor() {
+        if (authorName != null && !authorName.isEmpty()) {
+            return authorName.get(0);
+        }
+        return "Unknown Author";
+    }
+
+    public String getYear() {
+        return firstPublishYear != null ? String.valueOf(firstPublishYear) : "";
+    }
+
+    public String getGenre() {
+        if (subject != null && !subject.isEmpty()) {
+            // Ambil subjek pertama yang tidak terlalu panjang
+            for (String s : subject) {
+                if (s.length() <= 30) return s;
+            }
+            return subject.get(0);
+        }
+        return "Education";
+    }
+
+    public String getCover() {
+        if (coverId != null && coverId > 0) {
+            // Open Library cover URL: https://covers.openlibrary.org/b/id/{cover_i}-M.jpg
+            return "https://covers.openlibrary.org/b/id/" + coverId + "-M.jpg";
+        }
+        return "";
+    }
 
     public String getSynopsis() {
-        if (synopsis    != null && !synopsis.isEmpty())    return synopsis;
-        if (description != null && !description.isEmpty()) return description;
-        return "";
+        return synopsis != null ? synopsis : "";
     }
 
-    // Coba "image" dulu (GetBooksInfo), fallback ke "cover"
-    public String getCover() {
-        if (image != null && !image.isEmpty()) return image;
-        if (cover != null && !cover.isEmpty()) return cover;
-        return "";
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
     }
 }
