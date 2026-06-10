@@ -47,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(v -> attemptRegister());
 
         tvGoLogin.setOnClickListener(v -> {
-            finish(); // back to LoginActivity
+            finish();
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         });
     }
@@ -87,12 +87,15 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this,
                             "Email sudah terdaftar", Toast.LENGTH_SHORT).show();
                 } else if (id > 0) {
-                    prefs.setLoggedIn(true);
-                    prefs.saveUser(name, email, jurusan, id.intValue());
+                    // Tidak auto-login — kembali ke LoginActivity
                     Toast.makeText(RegisterActivity.this,
-                            "Registrasi berhasil! Selamat datang 🎉", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            "Registrasi berhasil! Silakan login dengan akun Anda 🎉",
+                            Toast.LENGTH_LONG).show();
+
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    // Kirim email ke LoginActivity agar field email terisi otomatis
+                    intent.putExtra("prefill_email", email);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();

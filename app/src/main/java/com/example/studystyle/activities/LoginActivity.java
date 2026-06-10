@@ -34,9 +34,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        etEmail    = findViewById(R.id.et_email);
-        etPassword = findViewById(R.id.et_password);
+        etEmail     = findViewById(R.id.et_email);
+        etPassword  = findViewById(R.id.et_password);
         progressBar = findViewById(R.id.progress_bar_login);
+
         Button btnLogin       = findViewById(R.id.btn_login);
         TextView tvGoRegister = findViewById(R.id.tv_go_register);
 
@@ -45,6 +46,13 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(this, RegisterActivity.class));
             overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
         });
+
+        // Isi otomatis email jika dikirim dari RegisterActivity
+        String prefillEmail = getIntent().getStringExtra("prefill_email");
+        if (prefillEmail != null && !prefillEmail.isEmpty()) {
+            etEmail.setText(prefillEmail);
+            etPassword.requestFocus();
+        }
     }
 
     private void attemptLogin() {
@@ -96,7 +104,6 @@ public class LoginActivity extends AppCompatActivity {
                             userId
                     );
                 }
-                // Lanjut ke MainActivity setelah restore selesai
                 goToMain();
             }
         });
