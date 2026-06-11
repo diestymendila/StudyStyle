@@ -67,6 +67,26 @@ public class PreferenceManager {
         editor.putString("profile_photo_" + getUserId(), path).apply();
     }
 
+    // ── Rating buku ──
+
+    /**
+     * Simpan rating (1–5) untuk sebuah buku berdasarkan key-nya.
+     * @param bookKey key buku dari Open Library, mis. "OL123W"
+     * @param rating  nilai bintang 1–5
+     */
+    public void saveBookRating(String bookKey, int rating) {
+        editor.putInt("book_rating_" + bookKey, rating).apply();
+    }
+
+    /**
+     * Ambil rating tersimpan untuk sebuah buku.
+     * @param bookKey key buku dari Open Library
+     * @return nilai bintang 1–5, atau 0 jika belum pernah dirating
+     */
+    public int getBookRating(String bookKey) {
+        return prefs.getInt("book_rating_" + bookKey, 0);
+    }
+
     public void clearSession() {
         editor.remove(Constants.KEY_IS_LOGGED_IN)
                 .remove(Constants.KEY_USER_NAME)

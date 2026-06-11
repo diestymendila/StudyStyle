@@ -17,6 +17,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.studystyle.R;
 import com.example.studystyle.activities.BookDetailActivity;
 import com.example.studystyle.models.BookItem;
+import com.example.studystyle.utils.PreferenceManager;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -31,10 +32,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     private final Context context;
     private List<BookItem> books;
     private OnBookClickListener listener;
+    private final PreferenceManager prefs;
 
     public BookAdapter(Context context, List<BookItem> books) {
         this.context = context;
         this.books   = books != null ? books : new ArrayList<>();
+        this.prefs   = new PreferenceManager(context);
     }
 
     public void setOnBookClickListener(OnBookClickListener listener) {
@@ -60,7 +63,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         h.tvAuthor.setText(book.getAuthor());
         h.tvYear.setText(book.getYear());
         h.tvGenre.setText(book.getGenre().isEmpty() ? "Education" : book.getGenre());
-        h.tvRating.setText("★ Belum dirating");
+
+        // Tampilkan rating tersimpan, atau "Belum dirating" jika belum ada
+        int savedRating = prefs.getBookRating(book.getKey());
+        if (savedRating > 0) {
+            h.tvRating.setText("★ " + savedRating + "/5");
+        } else {
+            h.tvRating.setText("★ Belum dirating");
+        }
 
         if (!book.getCover().isEmpty()) {
             Glide.with(context)
@@ -74,21 +84,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             h.ivCover.setImageResource(R.drawable.ic_book_placeholder);
         }
 
-        // Klik card → buka BookDetailActivity
+        // Klik card → buka BookDetailActivity via listener (agar ResultFragment bisa
+        // pakai startActivityForResult dan menerima result balik)
         h.cardBook.setOnClickListener(v -> {
-            // Kirim via listener jika ada (opsional), selalu buka Activity
             if (listener != null) listener.onBookClick(book);
-
-            Intent intent = new Intent(context, BookDetailActivity.class);
-            intent.putExtra(BookDetailActivity.EXTRA_BOOK_JSON, new Gson().toJson(book));
-            context.startActivity(intent);
-        });
-
-        // Klik hati favorit
-        h.tvFavorite.setOnClickListener(v -> {
-            h.tvFavorite.setText("♥");
-            h.tvFavorite.setTextColor(
-                    context.getResources().getColor(R.color.brand_primary, context.getTheme()));
         });
     }
 
@@ -97,18 +96,17 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     static class BookViewHolder extends RecyclerView.ViewHolder {
         CardView cardBook;
         ImageView ivCover;
-        TextView tvTitle, tvAuthor, tvYear, tvGenre, tvRating, tvFavorite;
+        TextView tvTitle, tvAuthor, tvYear, tvGenre, tvRating;
 
         BookViewHolder(@NonNull View v) {
             super(v);
-            cardBook   = v.findViewById(R.id.card_book);
-            ivCover    = v.findViewById(R.id.iv_book_cover);
-            tvTitle    = v.findViewById(R.id.tv_book_title);
-            tvAuthor   = v.findViewById(R.id.tv_book_author);
-            tvYear     = v.findViewById(R.id.tv_book_year);
-            tvGenre    = v.findViewById(R.id.tv_book_genre);
-            tvRating   = v.findViewById(R.id.tv_book_rating);
-            tvFavorite = v.findViewById(R.id.tv_book_favorite);
+            cardBook = v.findViewById(R.id.card_book);
+            ivCover  = v.findViewById(R.id.iv_book_cover);
+            tvTitle  = v.findViewById(R.id.tv_book_title);
+            tvAuthor = v.findViewById(R.id.tv_book_author);
+            tvYear   = v.findViewById(R.id.tv_book_year);
+            tvGenre  = v.findViewById(R.id.tv_book_genre);
+            tvRating = v.findViewById(R.id.tv_book_rating);
         }
     }
 }

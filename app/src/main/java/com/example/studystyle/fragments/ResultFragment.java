@@ -55,6 +55,8 @@ import retrofit2.Response;
 
 public class ResultFragment extends Fragment {
 
+    private static final int REQUEST_BOOK_DETAIL = 101;
+
     private PreferenceManager prefs;
     private TextView tvResultTitle, tvResultDesc, tvKelebihan, tvKekurangan;
     private TextView tvVisualPct, tvAuditoryPct, tvKinestetikPct;
@@ -108,12 +110,13 @@ public class ResultFragment extends Fragment {
         rvBooks.setAdapter(bookAdapter);
         rvBooks.setNestedScrollingEnabled(false);
 
-        // Listener klik buku → buka BookDetailActivity
+        // Listener klik buku → buka BookDetailActivity dengan startActivityForResult
+        // agar saat kembali, rating yang diubah bisa langsung direfresh di adapter
         bookAdapter.setOnBookClickListener(book -> {
             if (!isAdded() || getContext() == null) return;
             Intent intent = new Intent(requireContext(), BookDetailActivity.class);
             intent.putExtra(BookDetailActivity.EXTRA_BOOK_JSON, new Gson().toJson(book));
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_BOOK_DETAIL);
         });
 
         Bundle args = getArguments();
@@ -334,5 +337,19 @@ public class ResultFragment extends Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * Dipanggil saat kembali dari BookDetailActivity.
+     * Refresh adapter agar keterangan rating di card buku ikut diperbarui.
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, android.content.Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_BOOK_DETAIL
+                && resultCode == android.app.Activity.RESULT_OK) {
+            // Cukup notifyDataSetChanged agar semua item re-bind dan baca rating terbaru
+            bookAdapter.notifyDataSetChanged();
+        }
     }
 }

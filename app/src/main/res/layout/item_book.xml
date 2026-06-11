@@ -66,7 +66,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center_vertical">
 
-                <!-- Genre badge — background brand_primary, teks putih, fill sisa ruang -->
+                <!-- Genre badge -->
                 <TextView
                     android:id="@+id/tv_book_genre"
                     android:layout_width="0dp"
@@ -104,17 +104,6 @@
                 android:textColor="@color/warning" />
 
         </LinearLayout>
-
-        <!-- Ikon favorit (hati) -->
-        <TextView
-            android:id="@+id/tv_book_favorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="♡"
-            android:textSize="22sp"
-            android:textColor="?attr/text_secondary_color"
-            android:layout_marginStart="8dp"
-            android:padding="4dp" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
