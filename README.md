@@ -261,17 +261,16 @@ StudyStyle/
 
 ---
 
-## Developer
+## 👩‍💻 Developer
 
-| --------- | ------------------------------- |
-| **Nama**  | Diesty Mendila Tappo            |
-| **Tema**  | Pendidikan — Tes Gaya Belajar   |
-| **API**   | ZenQuotes API, Open Library API |
-| **Tahun** | 2026                            |
+| **Nama** | Diesty Mendila Tappo |
+| **Tema** | Pendidikan — Tes Gaya Belajar |
+| **API** | ZenQuotes API, Open Library API |
+| **Tahun** | 2026 |
 
 ---
 
-## Lisensi
+## 📄 Lisensi
 
 Project ini dibuat untuk keperluan Tugas Final Lab Mobile 2026
 
