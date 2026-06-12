@@ -47,10 +47,10 @@ public class HomeFragment extends Fragment {
     private LinearLayout layoutOffline;
     private Button       btnRefresh;
 
-    // [content1, author1, content2, author2, content3, author3]
+
     private final String[] quoteData = {"", "", "", "", "", ""};
 
-    // State fetch — reset tiap kali loadQuotes() dipanggil
+
     private final List<Quote> collectedQuotes = new ArrayList<>();
     private int     fetchCount  = 0;
     private boolean isFetching  = false;
@@ -143,7 +143,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    // ── Fetch 3 quote satu per satu dari /api/random ──
+
 
     private void startFetchingQuotes() {
         if (!isAdded()) return;
@@ -200,10 +200,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    /**
-     * Lanjut fetch berikutnya jika belum dapat 3 quote,
-     * atau tampilkan hasil jika sudah cukup / sudah terlalu banyak percobaan.
-     */
+
     private void scheduleNextOrFinish() {
         if (!isAdded()) {
             isFetching = false;
@@ -211,21 +208,21 @@ public class HomeFragment extends Fragment {
         }
 
         boolean cukup   = collectedQuotes.size() >= 3;
-        boolean terlalu = fetchCount >= 6; // Maksimal 6 percobaan untuk dapat 3 quote
+        boolean terlalu = fetchCount >= 6;
 
         if (cukup || terlalu) {
-            // Selesai — tampilkan apa yang sudah terkumpul
+
             isFetching = false;
             progressQuote.setVisibility(View.GONE);
 
             if (!collectedQuotes.isEmpty()) {
                 showQuoteCards(collectedQuotes);
             } else {
-                // Semua percobaan gagal atau kena rate-limit
+
                 showOfflineState();
             }
         } else {
-            // Fetch berikutnya dengan jeda 400ms agar tidak spam
+
             requireView().postDelayed(this::fetchOneQuote, 400);
         }
     }

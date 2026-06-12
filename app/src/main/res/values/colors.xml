@@ -32,8 +32,9 @@
     <!-- Tab toggle -->
     <color name="tab_selected_bg">#FFFFFF</color>
     <color name="tab_unselected_bg">#F0E4D8</color>
-    <color name="tab_selected_text">#C0392B</color>
-    <color name="tab_unselected_text">#9E8E82</color>
+    <color name="tab_selected_text">#FFFFFF</color>
+    <color name="tab_unselected_text">#7D6B5E</color>
+    <color name="tab_unselected_text_dark">#C49A94</color>
 
     <!-- Dark mode - merah gelap (bukan hitam) -->
     <color name="dark_surface">#2A0A08</color>

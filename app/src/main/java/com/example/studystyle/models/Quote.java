@@ -20,13 +20,13 @@ public class Quote {
 
     public String getId() { return id; }
 
-    /** Returns content from either ZenQuotes (q) or Quotable (content) */
+
     public String getContent() {
         if (q != null && !q.isEmpty()) return q;
         return content != null ? content : "";
     }
 
-    /** Returns author from either ZenQuotes (a) or Quotable (author) */
+
     public String getAuthor() {
         if (a != null && !a.isEmpty()) return a;
         return author != null ? author : "";

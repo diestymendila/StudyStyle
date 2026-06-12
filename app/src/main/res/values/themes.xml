@@ -22,8 +22,10 @@
     </style>
 
     <style name="Theme.StudyStyle.Splash" parent="Theme.StudyStyle">
-        <item name="android:windowBackground">@color/brand_primary_dark</item>
-        <item name="android:statusBarColor">@color/brand_primary_dark</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/brand_primary</item>
+        <item name="android:navigationBarColor">@color/brand_primary_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="CircleImageStyle">

@@ -2,18 +2,13 @@ package com.example.studystyle.database;
 
 import android.provider.BaseColumns;
 
-/**
- * Contract class mendefinisikan konstanta nama tabel dan kolom
- * untuk tabel results di SQLite, mengikuti pola Android ContentProvider contract.
- */
+
 public final class ResultContract {
 
     // Sembunyikan constructor agar tidak di-instantiate
     private ResultContract() {}
 
-    /**
-     * Inner class yang mendefinisikan konten tabel results.
-     */
+
     public static class ResultEntry implements BaseColumns {
         public static final String TABLE_NAME         = "results";
         public static final String COLUMN_USER_ID     = "user_id";
@@ -23,7 +18,7 @@ public final class ResultContract {
         public static final String COLUMN_RESULT_TYPE = "result_type";
         public static final String COLUMN_DATE        = "date";
 
-        // SQL untuk CREATE TABLE
+
         public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -35,14 +30,12 @@ public final class ResultContract {
                         COLUMN_DATE          + " TEXT NOT NULL" +
                         ")";
 
-        // SQL untuk DROP TABLE
+
         public static final String SQL_DROP_TABLE =
                 "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 
-    /**
-     * Inner class untuk tabel users.
-     */
+
     public static class UserEntry implements BaseColumns {
         public static final String TABLE_NAME      = "users";
         public static final String COLUMN_NAME     = "nama";

@@ -16,7 +16,6 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph" />
 
-    <!-- Bottom nav container dengan shadow atas -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

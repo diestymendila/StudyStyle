@@ -23,7 +23,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.studystyle.R;
 import com.example.studystyle.activities.LoginActivity;
-import com.example.studystyle.activities.MainActivity;
 import com.example.studystyle.background.BackgroundTask;
 import com.example.studystyle.background.ExecutorManager;
 import com.example.studystyle.database.DatabaseHelper;
@@ -43,7 +42,7 @@ public class ProfileFragment extends Fragment {
     private ImageView ivProfileAvatar;
     private SwitchMaterial switchDarkMode;
 
-    // Untuk dialog edit
+
     private ImageView ivDialogAvatar;
     private Uri selectedPhotoUri = null;
     private boolean photoRemoved = false;
@@ -83,9 +82,7 @@ public class ProfileFragment extends Fragment {
         switchDarkMode.setOnCheckedChangeListener((btn, isChecked) -> {
             prefs.setDarkMode(isChecked);
             ThemeHelper.applyTheme(isChecked);
-            Intent intent = new Intent(requireActivity(), MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            requireActivity().recreate();
         });
 
         btnEdit.setOnClickListener(v -> showEditDialog());
@@ -102,7 +99,6 @@ public class ProfileFragment extends Fragment {
         String style = prefs.getLastResult();
         tvDominantStyle.setText(TextUtils.isEmpty(style) ? "Belum ada hasil tes" : style + " Learner");
 
-        // Load foto profil jika ada
         loadAvatarInto(ivProfileAvatar);
     }
 
@@ -119,7 +115,6 @@ public class ProfileFragment extends Fragment {
                 }
             }
         }
-        // Fallback ke placeholder
         imageView.setImageResource(R.drawable.ic_person_placeholder);
     }
 
@@ -139,7 +134,6 @@ public class ProfileFragment extends Fragment {
         etName.setText(prefs.getUserName());
         etJurusan.setText(prefs.getUserJurusan());
 
-        // Tampilkan foto saat ini di dialog
         loadAvatarInto(ivDialogAvatar);
 
         btnChangePhoto.setOnClickListener(v ->
@@ -170,12 +164,10 @@ public class ProfileFragment extends Fragment {
     private void saveProfile(String newName, String newJurusan) {
         ExecutorManager.getInstance().execute(new BackgroundTask<Boolean>() {
             @Override public Boolean doInBackground() {
-                // Simpan foto jika dipilih
                 if (selectedPhotoUri != null) {
                     String path = savePhotoToInternal(selectedPhotoUri);
                     if (path != null) prefs.setProfilePhotoPath(path);
                 } else if (photoRemoved) {
-                    // Hapus file lama jika ada
                     String oldPath = prefs.getProfilePhotoPath();
                     if (!TextUtils.isEmpty(oldPath)) {
                         new File(oldPath).delete();
@@ -202,11 +194,9 @@ public class ProfileFragment extends Fragment {
             InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
             if (inputStream == null) return null;
 
-            // Compress bitmap agar tidak boros storage
             Bitmap original = BitmapFactory.decodeStream(inputStream);
             inputStream.close();
 
-            // Resize ke max 400x400
             int maxSize = 400;
             int width = original.getWidth();
             int height = original.getHeight();

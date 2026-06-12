@@ -10,7 +10,7 @@ import retrofit2.http.Query;
 
 public interface BookApiService {
 
-    // Open Library Search: GET /search.json?q=<query>&limit=10&fields=key,title,author_name,first_publish_year,subject,cover_i
+
     @GET("search.json")
     Call<BookSearchResponse> searchBooks(
             @Query("q")      String query,
@@ -18,7 +18,6 @@ public interface BookApiService {
             @Query("fields") String fields
     );
 
-    // Open Library Works detail (untuk sinopsis): GET /works/{workId}.json
     @GET("works/{workId}.json")
     Call<BookDetail> getBookDetail(@Path("workId") String workId);
 }

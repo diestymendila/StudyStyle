@@ -6,18 +6,14 @@ import com.google.gson.JsonObject;
 
 public class BookDetail {
 
-    // Sinopsis bisa berupa String atau Object {"value": "..."}
+
     @SerializedName("description")
     private JsonElement description;
 
     @SerializedName("title")
     private String title;
 
-    /**
-     * Open Library mengembalikan description sebagai:
-     * - String langsung: "This book is about..."
-     * - Object: {"type": "/type/text", "value": "This book is about..."}
-     */
+
     public String getDescription() {
         if (description == null) return "";
         try {

@@ -23,9 +23,7 @@ public class ExecutorManager {
         return instance;
     }
 
-    /**
-     * Run a task in background, then deliver result on main thread.
-     */
+
     public <T> void execute(BackgroundTask<T> task) {
         executor.execute(() -> {
             T result = task.doInBackground();
@@ -33,16 +31,12 @@ public class ExecutorManager {
         });
     }
 
-    /**
-     * Run a simple Runnable in background.
-     */
+
     public void runInBackground(Runnable runnable) {
         executor.execute(runnable);
     }
 
-    /**
-     * Run a Runnable on the main thread.
-     */
+
     public void runOnMainThread(Runnable runnable) {
         mainHandler.post(runnable);
     }

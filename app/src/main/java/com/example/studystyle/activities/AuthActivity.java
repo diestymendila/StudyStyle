@@ -9,12 +9,7 @@ import com.example.studystyle.R;
 import com.example.studystyle.utils.PreferenceManager;
 import com.example.studystyle.utils.ThemeHelper;
 
-/**
- * AuthActivity berfungsi sebagai entry point autentikasi.
- * Activity ini langsung meneruskan user ke LoginActivity.
- * Dipertahankan sebagai bagian dari arsitektur untuk kemudahan
- * ekspansi fitur autentikasi di masa mendatang (misal: OAuth, SSO).
- */
+
 public class AuthActivity extends AppCompatActivity {
 
     @Override
@@ -24,13 +19,12 @@ public class AuthActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        // Jika sudah login, langsung ke MainActivity
+
         if (prefs.isLoggedIn()) {
             goToMain();
             return;
         }
 
-        // Belum login → ke LoginActivity
         goToLogin();
     }
 

@@ -52,12 +52,12 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         h.rbB.setText(q.getOptionB());
         h.rbC.setText(q.getOptionC());
 
-        // Set background option sesuai tema tanpa file drawable baru
+
         setOptionBackground(h.rbA);
         setOptionBackground(h.rbB);
         setOptionBackground(h.rbC);
 
-        // Clear listener sebelum set checked agar tidak trigger loop
+
         h.rgOptions.setOnCheckedChangeListener(null);
         h.rgOptions.clearCheck();
 
@@ -79,13 +79,13 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         float density = context.getResources().getDisplayMetrics().density;
         float radius = 10 * density;
 
-        // Warna brand primary dari theme
+
         TypedValue tv = new TypedValue();
         context.getTheme().resolveAttribute(
                 com.google.android.material.R.attr.colorPrimary, tv, true);
         int brandColor = tv.data;
 
-        // State: checked
+
         GradientDrawable checkedBg = new GradientDrawable();
         checkedBg.setShape(GradientDrawable.RECTANGLE);
         checkedBg.setCornerRadius(radius);
@@ -93,7 +93,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
                 Color.green(brandColor), Color.blue(brandColor)));
         checkedBg.setStroke((int)(1.5f * density), brandColor);
 
-        // State: pressed
+
         GradientDrawable pressedBg = new GradientDrawable();
         pressedBg.setShape(GradientDrawable.RECTANGLE);
         pressedBg.setCornerRadius(radius);
@@ -101,7 +101,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
                 Color.green(brandColor), Color.blue(brandColor)));
         pressedBg.setStroke((int)(1 * density), brandColor);
 
-        // State: default — warna ikut tema
+
         int defaultBgColor = isDarkMode
                 ? context.getResources().getColor(R.color.dark_input_bg, context.getTheme())
                 : context.getResources().getColor(R.color.input_background, context.getTheme());
@@ -115,7 +115,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         defaultBg.setColor(defaultBgColor);
         defaultBg.setStroke((int)(1 * density), strokeColor);
 
-        // Rakit StateListDrawable
+
         StateListDrawable sld = new StateListDrawable();
         sld.addState(new int[]{android.R.attr.state_checked}, checkedBg);
         sld.addState(new int[]{android.R.attr.state_pressed}, pressedBg);

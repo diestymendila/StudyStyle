@@ -5,33 +5,33 @@ import java.util.List;
 
 public class BookItem {
 
-    // Open Library: key buku, contoh "/works/OL123W"
+
     @SerializedName("key")
     private String key;
 
     @SerializedName("title")
     private String title;
 
-    // Open Library: array nama penulis
+
     @SerializedName("author_name")
     private List<String> authorName;
 
-    // Open Library: tahun terbit pertama
+
     @SerializedName("first_publish_year")
     private Integer firstPublishYear;
 
-    // Open Library: cover ID (gunakan untuk membangun URL cover)
+
     @SerializedName("cover_i")
     private Integer coverId;
 
-    // Open Library: subject/genre
+
     @SerializedName("subject")
     private List<String> subject;
 
-    // Sinopsis — diisi manual setelah fetch detail
+
     private String synopsis;
 
-    // Fields yang diisi manual saat restore dari favorit
+
     private String cachedAuthor;
     private String cachedYear;
     private String cachedGenre;
@@ -41,7 +41,7 @@ public class BookItem {
 
     public String getKey() {
         if (key == null) return "";
-        // Ambil hanya bagian ID, contoh "/works/OL123W" → "OL123W"
+
         return key.replace("/works/", "");
     }
 
@@ -65,7 +65,7 @@ public class BookItem {
     public String getGenre() {
         if (cachedGenre != null && !cachedGenre.isEmpty()) return cachedGenre;
         if (subject != null && !subject.isEmpty()) {
-            // Ambil subjek pertama yang tidak terlalu panjang
+
             for (String s : subject) {
                 if (s.length() <= 30) return s;
             }
@@ -77,7 +77,7 @@ public class BookItem {
     public String getCover() {
         if (cachedCover != null && !cachedCover.isEmpty()) return cachedCover;
         if (coverId != null && coverId > 0) {
-            // Open Library cover URL: https://covers.openlibrary.org/b/id/{cover_i}-M.jpg
+
             return "https://covers.openlibrary.org/b/id/" + coverId + "-M.jpg";
         }
         return "";
@@ -91,10 +91,7 @@ public class BookItem {
         this.synopsis = synopsis;
     }
 
-    /**
-     * Helper untuk restore buku favorit dari SharedPreferences.
-     * Mengisi field-field yang biasanya diambil dari API.
-     */
+
     public void setFavoriteFields(String key, String title, String author,
                                   String year, String genre, String cover) {
         this.key          = key;

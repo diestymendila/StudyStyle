@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
 
-            // Warna icon & teks bottom nav (tema-aware: ikut dark/light theme)
+
             TypedValue tvSelected = new TypedValue();
             TypedValue tvUnselected = new TypedValue();
             getTheme().resolveAttribute(com.google.android.material.R.attr.colorPrimary, tvSelected, true);
@@ -56,26 +56,26 @@ public class MainActivity extends AppCompatActivity {
             bottomNav.setItemIconTintList(csl);
             bottomNav.setItemTextColor(csl);
 
-            // Set warna background bottom nav sesuai tema
+
             TypedValue tvNavBg = new TypedValue();
             getTheme().resolveAttribute(R.attr.nav_bg_color, tvNavBg, true);
             bottomNav.setBackgroundColor(tvNavBg.data);
 
-            // Hubungkan bottom nav dengan navController
+
             NavigationUI.setupWithNavController(bottomNav, navController);
 
-            // Override listener agar semua tab bisa berpindah dari halaman manapun
+
             bottomNav.setOnItemSelectedListener(item -> {
                 int id = item.getItemId();
 
-                // Jika sudah di halaman yang sama, tidak perlu navigate ulang
+
                 NavDestination current = navController.getCurrentDestination();
                 if (current != null && current.getId() == id) return true;
 
                 if (id == R.id.resultFragment) {
                     String lastResult = prefs.getLastResult();
                     if (lastResult == null || lastResult.isEmpty()) {
-                        // Belum pernah tes → arahkan ke tab Tes
+
                         navController.navigate(R.id.testFragment,
                                 null,
                                 new NavOptions.Builder()
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
-                // Home, Tes, Favorit, Profile — navigasi normal
+
                 navController.navigate(id,
                         null,
                         new NavOptions.Builder()
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             });
 
-            // Sinkronisasi highlight tab saat destination berubah
+
             navController.addOnDestinationChangedListener(
                     (controller, destination, arguments) -> {
                         bottomNav.setVisibility(View.VISIBLE);

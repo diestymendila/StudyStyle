@@ -1,7 +1,7 @@
 package com.example.studystyle.utils;
 
 public class Constants {
-    // ZenQuotes API (motivasi) — tidak perlu API key
+    // ZenQuotes API (motivasi) — tanpa API key
     public static final String BASE_URL_QUOTE = "https://zenquotes.io/";
 
     // Open Library API — gratis, tanpa API key

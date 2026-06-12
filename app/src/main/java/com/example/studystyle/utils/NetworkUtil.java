@@ -19,13 +19,13 @@ public class NetworkUtil {
             if (activeNetwork == null) return false;
             NetworkCapabilities caps = cm.getNetworkCapabilities(activeNetwork);
             if (caps == null) return false;
-            // Hapus NET_CAPABILITY_VALIDATED — sering false di emulator/VPN/beberapa device
+
             return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                     && (caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
                     || caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
                     || caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
         } else {
-            // Fallback untuk API < 23
+
             NetworkInfo info = cm.getActiveNetworkInfo();
             return info != null && info.isConnected();
         }

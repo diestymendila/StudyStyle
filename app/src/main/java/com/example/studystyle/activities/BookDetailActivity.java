@@ -43,11 +43,11 @@ public class BookDetailActivity extends AppCompatActivity {
     private BookItem book;
     private PreferenceManager prefs;
 
-    // Favorite
+
     private Button btnFavoriteBook;
     private boolean isFavorited = false;
 
-    // Review
+
     private final List<String> reviewList = new ArrayList<>();
     private LinearLayout layoutReviewsContainer;
     private TextView tvReviewsLabel;
@@ -103,7 +103,7 @@ public class BookDetailActivity extends AppCompatActivity {
                     .into(ivCover);
         }
 
-        // Sinopsis
+
         String cached = book.getSynopsis();
         if (cached != null && !cached.isEmpty()) {
             progressSynopsis.setVisibility(View.GONE);
@@ -141,11 +141,11 @@ public class BookDetailActivity extends AppCompatActivity {
             tvNoSynopsis.setVisibility(View.VISIBLE);
         }
 
-        // Tampilkan status favorit
+
         isFavorited = prefs.isBookFavorited(bookKey);
         updateFavoriteButton();
 
-        // Tombol favorit
+
         btnFavoriteBook.setOnClickListener(v -> {
             if (isFavorited) {
                 prefs.removeFavoriteBook(bookKey);
@@ -159,7 +159,7 @@ public class BookDetailActivity extends AppCompatActivity {
             updateFavoriteButton();
         });
 
-        // Tampilkan rating tersimpan
+
         int savedRating = prefs.getBookRating(bookKey);
         if (savedRating > 0) {
             applyStarColors(savedRating);
@@ -168,10 +168,10 @@ public class BookDetailActivity extends AppCompatActivity {
             tvHint.setText(savedRating + " dari 5 bintang");
         }
 
-        // Back
+
         btnBack.setOnClickListener(v -> finishWithResult());
 
-        // Klik bintang
+
         for (int i = 0; i < stars.length; i++) {
             final int starIndex = i + 1;
             stars[i].setOnClickListener(v -> {
@@ -184,7 +184,7 @@ public class BookDetailActivity extends AppCompatActivity {
             });
         }
 
-        // Submit review
+
         final String finalUserName = userName;
         Button btnSubmitReview = findViewById(R.id.btn_submit_review);
         btnSubmitReview.setOnClickListener(v -> {
@@ -216,7 +216,7 @@ public class BookDetailActivity extends AppCompatActivity {
                     ContextCompat.getColor(this, R.color.white));
         } else {
             btnFavoriteBook.setText("❤  Tambahkan ke Favorit");
-            // Kembalikan ke style ButtonSecondary (outline)
+
             btnFavoriteBook.setBackgroundTintList(
                     ContextCompat.getColorStateList(this, android.R.color.transparent));
             btnFavoriteBook.setTextColor(

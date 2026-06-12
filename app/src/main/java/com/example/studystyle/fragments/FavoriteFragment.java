@@ -1,7 +1,10 @@
 package com.example.studystyle.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +31,14 @@ public class FavoriteFragment extends Fragment {
 
     private PreferenceManager prefs;
 
-    private TextView    tabQuotes, tabBooks;
+    private TextView tabQuotes, tabBooks;
     private RecyclerView rvQuotes, rvBooks;
     private LinearLayout layoutEmpty;
-    private TextView    tvEmptyMessage, tvEmptyHint;
+    private TextView tvEmptyMessage, tvEmptyHint;
 
     private boolean showingQuotes = true;
+    private int colorSelectedText;
+    private int colorUnselectedText;
 
     @Nullable
     @Override
@@ -58,11 +63,30 @@ public class FavoriteFragment extends Fragment {
         tvEmptyMessage = view.findViewById(R.id.tv_empty_message);
         tvEmptyHint    = view.findViewById(R.id.tv_empty_hint);
 
+
+        LinearLayout tabContainer = view.findViewById(R.id.tab_container);
+        TypedValue tv = new TypedValue();
+        requireContext().getTheme().resolveAttribute(R.attr.background_primary, tv, true);
+        int bgColor = tv.data;
+
+        GradientDrawable tabBg = new GradientDrawable();
+        tabBg.setShape(GradientDrawable.RECTANGLE);
+        tabBg.setCornerRadius(50f);
+        tabBg.setColor(bgColor);
+        tabBg.setStroke(2, Color.parseColor("#AAAAAA"));
+        tabContainer.setBackground(tabBg);
+
+
+        boolean isDark = prefs.isDarkMode();
+        colorSelectedText   = requireContext().getResources().getColor(R.color.tab_selected_text, null);
+        colorUnselectedText = requireContext().getResources().getColor(
+                isDark ? R.color.tab_unselected_text_dark : R.color.tab_unselected_text, null);
+
         rvQuotes.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvBooks.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         tabQuotes.setOnClickListener(v -> switchTab(true));
-        tabBooks.setOnClickListener(v  -> switchTab(false));
+        tabBooks.setOnClickListener(v -> switchTab(false));
 
         switchTab(true);
     }
@@ -70,7 +94,6 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Refresh setiap kali kembali ke fragment ini
         if (showingQuotes) loadQuotes();
         else loadBooks();
     }
@@ -79,15 +102,15 @@ public class FavoriteFragment extends Fragment {
         showingQuotes = quotes;
 
         if (quotes) {
-            tabQuotes.setTextColor(requireContext().getResources().getColor(R.color.tab_selected_text, null));
+            tabQuotes.setTextColor(colorSelectedText);
             tabQuotes.setBackgroundResource(R.drawable.bg_button);
-            tabBooks.setTextColor(requireContext().getResources().getColor(R.color.tab_unselected_text, null));
+            tabBooks.setTextColor(colorUnselectedText);
             tabBooks.setBackgroundResource(R.color.transparent);
             loadQuotes();
         } else {
-            tabBooks.setTextColor(requireContext().getResources().getColor(R.color.tab_selected_text, null));
+            tabBooks.setTextColor(colorSelectedText);
             tabBooks.setBackgroundResource(R.drawable.bg_button);
-            tabQuotes.setTextColor(requireContext().getResources().getColor(R.color.tab_unselected_text, null));
+            tabQuotes.setTextColor(colorUnselectedText);
             tabQuotes.setBackgroundResource(R.color.transparent);
             loadBooks();
         }

@@ -93,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
 
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                    // Kirim email ke LoginActivity agar field email terisi otomatis
+
                     intent.putExtra("prefill_email", email);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);

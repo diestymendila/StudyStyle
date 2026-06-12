@@ -12,7 +12,6 @@
         <item name="android:windowLightStatusBar">false</item>
         <item name="background_primary">@color/dark_surface</item>
         <item name="background_card">@color/dark_card</item>
-        <!-- Tambahan attr dark -->
         <item name="text_primary_color">@color/dark_text_primary</item>
         <item name="text_secondary_color">@color/dark_text_secondary</item>
         <item name="divider_color">@color/dark_divider</item>
@@ -20,6 +19,13 @@
         <item name="nav_bg_color">@color/nav_background_dark</item>
         <item name="nav_unselected_color">@color/nav_unselected_dark</item>
         <item name="card_elevated_color">@color/dark_card_elevated</item>
+        <!-- FIX: materialCardViewStyle agar CardView ikut tema gelap -->
+        <item name="materialCardViewStyle">@style/DarkCardViewStyle</item>
+    </style>
+
+    <style name="DarkCardViewStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/dark_card</item>
+        <item name="cardElevation">2dp</item>
     </style>
 
     <style name="InputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">

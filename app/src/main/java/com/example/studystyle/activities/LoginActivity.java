@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
         });
 
-        // Isi otomatis email jika dikirim dari RegisterActivity
+
         String prefillEmail = getIntent().getStringExtra("prefill_email");
         if (prefillEmail != null && !prefillEmail.isEmpty()) {
             etEmail.setText(prefillEmail);
@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                             user.getJurusan() != null ? user.getJurusan() : "",
                             user.getId());
 
-                    // Restore hasil tes terakhir dari DB ke prefs
+
                     restoreLastResultFromDB(user.getId());
                 } else {
                     Toast.makeText(LoginActivity.this,

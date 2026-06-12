@@ -19,11 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static DatabaseHelper instance;
 
-    /**
-     * Singleton — satu instance dipakai sepanjang lifecycle app.
-     * JANGAN panggil db.close() di method manapun karena akan menutup
-     * koneksi yang dipakai bersama oleh semua thread.
-     */
+
     public static synchronized DatabaseHelper getInstance(Context context) {
         if (instance == null) {
             instance = new DatabaseHelper(context.getApplicationContext());
@@ -57,7 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(UserEntry.COLUMN_EMAIL,    user.getEmail());
         values.put(UserEntry.COLUMN_PASSWORD, user.getPassword());
         values.put(UserEntry.COLUMN_JURUSAN,  user.getJurusan());
-        // Tidak memanggil db.close() — singleton tidak boleh close
+
         return db.insert(UserEntry.TABLE_NAME, null, values);
     }
 
@@ -78,7 +74,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.setJurusan(cursor.getString(cursor.getColumnIndexOrThrow(UserEntry.COLUMN_JURUSAN)));
         }
         if (cursor != null) cursor.close();
-        // Tidak db.close()
+
         return user;
     }
 
@@ -90,7 +86,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null, null, null);
         boolean exists = cursor != null && cursor.moveToFirst();
         if (cursor != null) cursor.close();
-        // Tidak db.close()
+
         return exists;
     }
 
@@ -102,7 +98,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{email, password}, null, null, null);
         boolean valid = cursor != null && cursor.moveToFirst();
         if (cursor != null) cursor.close();
-        // Tidak db.close()
+
         return valid;
     }
 
@@ -113,7 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(UserEntry.COLUMN_JURUSAN, jurusan);
         int rows = db.update(UserEntry.TABLE_NAME, values,
                 UserEntry._ID + "=?", new String[]{String.valueOf(userId)});
-        // Tidak db.close()
+
         return rows > 0;
     }
 
@@ -128,7 +124,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ResultEntry.COLUMN_KINESTETIK,  result.getKinestetikScore());
         values.put(ResultEntry.COLUMN_RESULT_TYPE, result.getResultType());
         values.put(ResultEntry.COLUMN_DATE,        result.getDate());
-        // Tidak db.close()
+
         return db.insert(ResultEntry.TABLE_NAME, null, values);
     }
 
@@ -154,7 +150,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             cursor.close();
         }
-        // Tidak db.close()
+
         return results;
     }
 
@@ -177,7 +173,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             result.setDate(cursor.getString(cursor.getColumnIndexOrThrow(ResultEntry.COLUMN_DATE)));
         }
         if (cursor != null) cursor.close();
-        // Tidak db.close()
+
         return result;
     }
 }
