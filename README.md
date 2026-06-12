@@ -261,12 +261,12 @@ StudyStyle/
 
 ---
 
-## 👩‍💻 Developer
-
-| **Nama** | Diesty Mendila Tappo |
-| **Tema** | Pendidikan — Tes Gaya Belajar |
-| **API** | ZenQuotes API, Open Library API |
-| **Tahun** | 2026 |
+| Info      | Detail                          |
+| --------- | ------------------------------- |
+| **Nama**  | Diesty Mendila Tappo            |
+| **Tema**  | Pendidikan — Tes Gaya Belajar   |
+| **API**   | ZenQuotes API, Open Library API |
+| **Tahun** | 2026                            |
 
 ---
 
