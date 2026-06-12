@@ -4,7 +4,7 @@
 
 ---
 
-## 📸 Tampilan Aplikasi
+## Tampilan Aplikasi
 
 | Splash                       | Home                     | Hasil & Riwayat Tes                    |
 | ---------------------------- | ------------------------ | -------------------------------------- |
@@ -20,7 +20,7 @@
 
 ---
 
-## ✨ Fitur
+## Fitur
 
 | No  | Fitur                        | Deskripsi                                                                                    |
 | --- | ---------------------------- | -------------------------------------------------------------------------------------------- |
@@ -39,7 +39,7 @@
 
 ---
 
-## 🛠️ Spesifikasi Teknis
+## Spesifikasi Teknis
 
 | Komponen              | Detail                                                      |
 | --------------------- | ----------------------------------------------------------- |
@@ -56,7 +56,7 @@
 
 ---
 
-## 📦 Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
 | Teknologi / Library            | Versi    | Kegunaan                                                     |
 | ------------------------------ | -------- | ------------------------------------------------------------ |
@@ -78,7 +78,7 @@
 
 ---
 
-## 🌐 API yang Digunakan
+## API yang Digunakan
 
 | API                         | Base URL                          | Kegunaan                                                  | API Key          |
 | --------------------------- | --------------------------------- | --------------------------------------------------------- | ---------------- |
@@ -91,7 +91,7 @@
 
 ---
 
-## 📱 Cara Penggunaan
+## Cara Penggunaan
 
 1. **Buka aplikasi** — Splash screen muncul, lalu diarahkan ke halaman login atau registrasi
 2. **Registrasi / Login** — Buat akun baru atau masuk dengan akun yang sudah ada
@@ -102,12 +102,12 @@
 7. **Simpan buku favorit** — Ketuk ikon hati pada kartu buku untuk menyimpannya
 8. **Lihat detail buku** — Ketuk kartu buku untuk membuka halaman detail lengkap dengan sinopsis dan cover
 9. **Buka favorit** — Tab **Favorit** menampilkan semua kutipan dan buku yang tersimpan
-10. **Kelola profil** — Tab **Profil** untuk melihat info akun, mengganti foto profil, dan mengaktifkan dark mode
+10. **Kelola profil** — Tab **Profil** untuk melihat info akun, mengedit dan mengganti foto profil, dan mengaktifkan dark mode
 11. **Ganti tema** — Aktifkan toggle Dark Mode di halaman Profil untuk beralih tema
 
 ---
 
-## 🏗️ Struktur Project
+## Struktur Project
 
 ```
 StudyStyle/
@@ -116,58 +116,58 @@ StudyStyle/
 │   │   └── main/
 │   │       ├── java/com/example/studystyle/
 │   │       │   ├── activities/
-│   │       │   │   ├── SplashActivity.java          # Launcher & splash screen (3 detik)
-│   │       │   │   ├── AuthActivity.java             # Container autentikasi (auth flow)
-│   │       │   │   ├── LoginActivity.java            # Halaman login pengguna
-│   │       │   │   ├── RegisterActivity.java         # Halaman registrasi akun baru
-│   │       │   │   ├── MainActivity.java             # Activity utama + BottomNavigationView
-│   │       │   │   └── BookDetailActivity.java       # Halaman detail buku dari Open Library
+│   │       │   │   ├── SplashActivity.java
+│   │       │   │   ├── AuthActivity.java
+│   │       │   │   ├── LoginActivity.java
+│   │       │   │   ├── RegisterActivity.java
+│   │       │   │   ├── MainActivity.java
+│   │       │   │   └── BookDetailActivity.java
 │   │       │   │
 │   │       │   ├── fragments/
-│   │       │   │   ├── HomeFragment.java             # Sapaan, status belajar, kutipan motivasi
-│   │       │   │   ├── TestFragment.java             # Kuis 30 soal gaya belajar VAK
-│   │       │   │   ├── ResultFragment.java           # Hasil tes, pie chart, riwayat, buku
-│   │       │   │   ├── FavoriteFragment.java         # Daftar kutipan & buku favorit
-│   │       │   │   └── ProfileFragment.java          # Profil, edit data, dark mode toggle
+│   │       │   │   ├── HomeFragment.java
+│   │       │   │   ├── TestFragment.java
+│   │       │   │   ├── ResultFragment.java
+│   │       │   │   ├── FavoriteFragment.java
+│   │       │   │   └── ProfileFragment.java
 │   │       │   │
 │   │       │   ├── adapters/
-│   │       │   │   ├── QuestionAdapter.java          # RecyclerView untuk soal tes
-│   │       │   │   ├── BookAdapter.java              # RecyclerView untuk rekomendasi buku
-│   │       │   │   ├── FavoriteBookAdapter.java      # RecyclerView untuk buku favorit
-│   │       │   │   ├── FavoriteQuoteAdapter.java     # RecyclerView untuk kutipan favorit
-│   │       │   │   └── HistoryAdapter.java           # RecyclerView untuk riwayat hasil tes
+│   │       │   │   ├── QuestionAdapter.java
+│   │       │   │   ├── BookAdapter.java
+│   │       │   │   ├── FavoriteBookAdapter.java
+│   │       │   │   ├── FavoriteQuoteAdapter.java
+│   │       │   │   └── HistoryAdapter.java
 │   │       │   │
 │   │       │   ├── api/
-│   │       │   │   ├── ApiClient.java                # Retrofit instance (Quote & Books)
-│   │       │   │   ├── ApiService.java               # Interface endpoint ZenQuotes API
-│   │       │   │   └── BookApiService.java           # Interface endpoint Open Library API
+│   │       │   │   ├── ApiClient.java
+│   │       │   │   ├── ApiService.java
+│   │       │   │   └── BookApiService.java
 │   │       │   │
 │   │       │   ├── background/
-│   │       │   │   ├── BackgroundTask.java           # Interface untuk background operation
-│   │       │   │   └── ExecutorManager.java          # Manajemen ExecutorService & Handler
+│   │       │   │   ├── BackgroundTask.java
+│   │       │   │   └── ExecutorManager.java
 │   │       │   │
 │   │       │   ├── database/
-│   │       │   │   ├── DatabaseHelper.java           # SQLiteOpenHelper (CRUD user & hasil)
-│   │       │   │   └── ResultContract.java           # Kontrak tabel User & Result di SQLite
+│   │       │   │   ├── DatabaseHelper.java
+│   │       │   │   └── ResultContract.java
 │   │       │   │
 │   │       │   ├── models/
-│   │       │   │   ├── User.java                     # Model data pengguna
-│   │       │   │   ├── Question.java                 # Model soal tes VAK
-│   │       │   │   ├── Quote.java                    # Model kutipan motivasi
-│   │       │   │   ├── Result.java                   # Model hasil tes
-│   │       │   │   ├── BookItem.java                 # Model item buku dari Open Library
-│   │       │   │   ├── BookSearchResponse.java       # Model response pencarian buku
-│   │       │   │   └── BookDetail.java               # Model detail buku (sinopsis, dll.)
+│   │       │   │   ├── User.java
+│   │       │   │   ├── Question.java
+│   │       │   │   ├── Quote.java
+│   │       │   │   ├── Result.java
+│   │       │   │   ├── BookItem.java
+│   │       │   │   ├── BookSearchResponse.java
+│   │       │   │   └── BookDetail.java
 │   │       │   │
 │   │       │   └── utils/
-│   │       │       ├── Constants.java                # Konstanta URL, key, query buku
-│   │       │       ├── NetworkUtil.java              # Cek koneksi internet (ConnectivityManager)
-│   │       │       ├── PreferenceManager.java        # Wrapper SharedPreferences (sesi, foto, dll.)
-│   │       │       └── ThemeHelper.java              # Terapkan dark/light mode via AppCompatDelegate
+│   │       │       ├── Constants.java
+│   │       │       ├── NetworkUtil.java
+│   │       │       ├── PreferenceManager.java
+│   │       │       └── ThemeHelper.java
 │   │       │
 │   │       ├── res/
-│   │       │   ├── anim/                             # Animasi transisi fragment
-│   │       │   ├── drawable/                         # Vector drawable & background XML
+│   │       │   ├── anim/
+│   │       │   ├── drawable/
 │   │       │   ├── layout/
 │   │       │   │   ├── activity_splash.xml
 │   │       │   │   ├── activity_main.xml
@@ -186,16 +186,16 @@ StudyStyle/
 │   │       │   │   ├── item_history.xml
 │   │       │   │   └── item_question.xml
 │   │       │   ├── menu/
-│   │       │   │   └── bottom_nav_menu.xml           # Menu navigasi bawah (4 tab)
+│   │       │   │   └── bottom_nav_menu.xml
 │   │       │   ├── navigation/
-│   │       │   │   └── nav_graph.xml                 # Navigation graph semua fragment
+│   │       │   │   └── nav_graph.xml
 │   │       │   └── values/
-│   │       │       ├── attrs.xml                     # Custom attribute (?attr/)
-│   │       │       ├── colors.xml                    # Palet warna aplikasi
-│   │       │       ├── dimens.xml                    # Dimensi margin & padding
-│   │       │       ├── strings.xml                   # String resource
-│   │       │       ├── themes.xml                    # Tema light mode
-│   │       │       └── themes.xml (night)            # Tema dark mode (deep red #2A0A08)
+│   │       │       ├── attrs.xml
+│   │       │       ├── colors.xml
+│   │       │       ├── dimens.xml
+│   │       │       ├── strings.xml
+│   │       │       ├── themes.xml
+│   │       │       └── themes.xml (night)
 │   │       │
 │   │       └── AndroidManifest.xml
 │   │
@@ -209,7 +209,7 @@ StudyStyle/
 
 ---
 
-## 🚀 Cara Install
+## Cara Install
 
 ### Cara 1 — Via APK (Mudah)
 
@@ -226,7 +226,7 @@ StudyStyle/
 
 **Persyaratan:**
 
-- Android Studio (versi terbaru)
+- Android Studio (versi Meerkat)
 - Java JDK 11 atau lebih tinggi
 - Koneksi internet (untuk sinkronisasi Gradle)
 
@@ -261,9 +261,8 @@ StudyStyle/
 
 ---
 
-## 👩‍💻 Developer
+## Developer
 
-|           |                                 |
 | --------- | ------------------------------- |
 | **Nama**  | Diesty Mendila Tappo            |
 | **Tema**  | Pendidikan — Tes Gaya Belajar   |
@@ -272,7 +271,7 @@ StudyStyle/
 
 ---
 
-## 📄 Lisensi
+## Lisensi
 
 Project ini dibuat untuk keperluan Tugas Final Lab Mobile 2026
 
