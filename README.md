@@ -261,6 +261,8 @@ StudyStyle/
 
 ---
 
+## Developer
+
 | Info      | Detail                          |
 | --------- | ------------------------------- |
 | **Nama**  | Diesty Mendila Tappo            |
@@ -270,7 +272,7 @@ StudyStyle/
 
 ---
 
-## 📄 Lisensi
+## Lisensi
 
 Project ini dibuat untuk keperluan Tugas Final Lab Mobile 2026
 
