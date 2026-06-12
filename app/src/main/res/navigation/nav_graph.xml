@@ -72,6 +72,12 @@
     </fragment>
 
     <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.studystyle.fragments.FavoriteFragment"
+        android:label="Favorit"
+        tools:layout="@layout/fragment_favorite" />
+
+    <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.studystyle.fragments.ProfileFragment"
         android:label="Me"

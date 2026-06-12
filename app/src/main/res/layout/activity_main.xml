@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_primary">
+    android:background="?attr/background_primary">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
@@ -21,22 +21,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/nav_background"
+        android:background="?attr/nav_bg_color"
         android:elevation="16dp">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/divider" />
+            android:background="?attr/divider_color" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:background="@color/nav_background"
+            android:background="?attr/nav_bg_color"
             app:menu="@menu/bottom_nav_menu"
-            app:itemTextColor="@color/nav_unselected"
-            app:itemIconTint="@color/nav_unselected"
+            app:itemTextColor="?attr/nav_unselected_color"
+            app:itemIconTint="?attr/nav_unselected_color"
             app:itemRippleColor="@color/nav_indicator"
             app:labelVisibilityMode="labeled" />
     </LinearLayout>

@@ -66,6 +66,7 @@ public class ResultFragment extends Fragment {
     private LinearLayout layoutNoHistory;
     private ProgressBar progressBooks;
     private TextView tvBooksOffline;
+    private Button btnRetryBooks; // TAMBAHAN: tombol refresh buku
     private RecyclerView rvBooks;
     private String currentResultType = "";
 
@@ -94,6 +95,7 @@ public class ResultFragment extends Fragment {
         layoutNoHistory = view.findViewById(R.id.layout_no_history);
         progressBooks   = view.findViewById(R.id.progress_books);
         tvBooksOffline  = view.findViewById(R.id.tv_books_offline);
+        btnRetryBooks   = view.findViewById(R.id.btn_retry_books); // TAMBAHAN
         rvBooks         = view.findViewById(R.id.rv_books);
 
         RecyclerView rvHistory = view.findViewById(R.id.rv_history);
@@ -110,8 +112,6 @@ public class ResultFragment extends Fragment {
         rvBooks.setAdapter(bookAdapter);
         rvBooks.setNestedScrollingEnabled(false);
 
-        // Listener klik buku → buka BookDetailActivity dengan startActivityForResult
-        // agar saat kembali, rating yang diubah bisa langsung direfresh di adapter
         bookAdapter.setOnBookClickListener(book -> {
             if (!isAdded() || getContext() == null) return;
             Intent intent = new Intent(requireContext(), BookDetailActivity.class);
@@ -151,6 +151,13 @@ public class ResultFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_result_to_test));
         btnHome.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_result_to_home));
+
+        // TAMBAHAN: listener tombol retry buku
+        btnRetryBooks.setOnClickListener(v -> {
+            if (!currentResultType.isEmpty()) {
+                loadBooks(currentResultType);
+            }
+        });
     }
 
     private void showEmptyState(View view) {
@@ -246,11 +253,13 @@ public class ResultFragment extends Fragment {
         }
     }
 
+    // DIMODIFIKASI: tambah kontrol visibilitas btnRetryBooks
     private void loadBooks(String resultType) {
         if (!isAdded() || getContext() == null) return;
 
         if (!NetworkUtil.isConnected(requireContext())) {
             tvBooksOffline.setVisibility(View.VISIBLE);
+            btnRetryBooks.setVisibility(View.VISIBLE); // TAMBAHAN
             rvBooks.setVisibility(View.GONE);
             progressBooks.setVisibility(View.GONE);
             return;
@@ -258,6 +267,7 @@ public class ResultFragment extends Fragment {
 
         progressBooks.setVisibility(View.VISIBLE);
         tvBooksOffline.setVisibility(View.GONE);
+        btnRetryBooks.setVisibility(View.GONE); // TAMBAHAN
         rvBooks.setVisibility(View.GONE);
 
         String query;
@@ -285,9 +295,11 @@ public class ResultFragment extends Fragment {
                             List<BookItem> books = response.body().getDocs();
                             bookAdapter.updateData(books);
                             rvBooks.setVisibility(View.VISIBLE);
+                            btnRetryBooks.setVisibility(View.GONE); // TAMBAHAN
                         } else {
                             tvBooksOffline.setText("Tidak ada rekomendasi buku saat ini.\nPastikan koneksi internet aktif.");
                             tvBooksOffline.setVisibility(View.VISIBLE);
+                            btnRetryBooks.setVisibility(View.VISIBLE); // TAMBAHAN
                         }
                     }
 
@@ -298,6 +310,7 @@ public class ResultFragment extends Fragment {
                         progressBooks.setVisibility(View.GONE);
                         tvBooksOffline.setText("Gagal memuat rekomendasi buku.\nCoba beberapa saat lagi.");
                         tvBooksOffline.setVisibility(View.VISIBLE);
+                        btnRetryBooks.setVisibility(View.VISIBLE); // TAMBAHAN
                     }
                 });
     }
@@ -339,16 +352,11 @@ public class ResultFragment extends Fragment {
         });
     }
 
-    /**
-     * Dipanggil saat kembali dari BookDetailActivity.
-     * Refresh adapter agar keterangan rating di card buku ikut diperbarui.
-     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, android.content.Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_BOOK_DETAIL
                 && resultCode == android.app.Activity.RESULT_OK) {
-            // Cukup notifyDataSetChanged agar semua item re-bind dan baca rating terbaru
             bookAdapter.notifyDataSetChanged();
         }
     }

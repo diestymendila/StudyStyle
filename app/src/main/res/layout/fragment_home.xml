@@ -40,7 +40,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Apa yang ingin kamu pelajari hari ini?"
+                    android:text="Selamat Datang di Aplikasi StudyStyle"
                     android:textSize="13sp"
                     android:textColor="?attr/text_secondary_color"
                     android:layout_marginTop="2dp" />
@@ -181,13 +181,29 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="18dp">
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- Quote mark + heart row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="&#10077;"
-                    android:textSize="28sp"
-                    android:textColor="@color/brand_primary"
-                    android:alpha="0.4" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="&#10077;"
+                        android:textSize="28sp"
+                        android:textColor="@color/brand_primary"
+                        android:alpha="0.4" />
+                    <ImageView
+                        android:id="@+id/btn_fav_quote1"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_heart"
+                        android:padding="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Tambah ke favorit" />
+                </LinearLayout>
                 <TextView
                     android:id="@+id/tv_quote_content1"
                     android:layout_width="match_parent"
@@ -231,13 +247,28 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="18dp">
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="&#10077;"
-                    android:textSize="28sp"
-                    android:textColor="@color/brand_primary"
-                    android:alpha="0.4" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="&#10077;"
+                        android:textSize="28sp"
+                        android:textColor="@color/brand_primary"
+                        android:alpha="0.4" />
+                    <ImageView
+                        android:id="@+id/btn_fav_quote2"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_heart"
+                        android:padding="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Tambah ke favorit" />
+                </LinearLayout>
                 <TextView
                     android:id="@+id/tv_quote_content2"
                     android:layout_width="match_parent"
@@ -281,13 +312,28 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="18dp">
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="&#10077;"
-                    android:textSize="28sp"
-                    android:textColor="@color/brand_primary"
-                    android:alpha="0.4" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="&#10077;"
+                        android:textSize="28sp"
+                        android:textColor="@color/brand_primary"
+                        android:alpha="0.4" />
+                    <ImageView
+                        android:id="@+id/btn_fav_quote3"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_heart"
+                        android:padding="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Tambah ke favorit" />
+                </LinearLayout>
                 <TextView
                     android:id="@+id/tv_quote_content3"
                     android:layout_width="match_parent"

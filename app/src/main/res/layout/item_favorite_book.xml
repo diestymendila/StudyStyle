@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="?attr/background_card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="14dp"
+        android:gravity="center_vertical">
+
+        <!-- Cover buku -->
+        <ImageView
+            android:id="@+id/iv_fav_book_cover"
+            android:layout_width="60dp"
+            android:layout_height="84dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_book_cover_placeholder"
+            android:src="@drawable/ic_book_placeholder"
+            android:layout_marginEnd="14dp" />
+
+        <!-- Info buku -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_fav_book_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="?attr/text_primary_color"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.3" />
+
+            <TextView
+                android:id="@+id/tv_fav_book_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textSize="12sp"
+                android:textColor="?attr/text_secondary_color"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tv_fav_book_genre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="10sp"
+                android:textColor="@color/brand_primary"
+                android:background="@drawable/bg_genre_badge"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp" />
+
+        </LinearLayout>
+
+        <!-- Tombol hapus favorit -->
+        <ImageView
+            android:id="@+id/btn_remove_favorite_book"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_heart_filled"
+            android:padding="4dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Hapus dari favorit" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

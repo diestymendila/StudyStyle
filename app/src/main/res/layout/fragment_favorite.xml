@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?android:attr/windowBackground">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="36dp"
+        android:paddingBottom="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Favorit Saya ❤️"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="?attr/text_primary_color" />
+
+    </LinearLayout>
+
+    <!-- Tab toggle: Quote | Buku -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_card"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/tab_quotes"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="💬  Quotes"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/tab_selected_text"
+                android:background="@drawable/bg_button"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tab_books"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="📚  Buku"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/tab_unselected_text"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Content area -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- Tab Quotes -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_favorite_quotes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"
+            android:visibility="visible" />
+
+        <!-- Tab Buku -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_favorite_books"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"
+            android:visibility="gone" />
+
+        <!-- State kosong -->
+        <LinearLayout
+            android:id="@+id/layout_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="❤️"
+                android:textSize="48sp" />
+
+            <TextView
+                android:id="@+id/tv_empty_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Belum ada favorit"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/text_primary_color" />
+
+            <TextView
+                android:id="@+id/tv_empty_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Tekan ikon ❤ pada quote untuk menyimpannya"
+                android:textSize="13sp"
+                android:textColor="?attr/text_secondary_color"
+                android:gravity="center"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

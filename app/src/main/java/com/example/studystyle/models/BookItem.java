@@ -31,6 +31,12 @@ public class BookItem {
     // Sinopsis — diisi manual setelah fetch detail
     private String synopsis;
 
+    // Fields yang diisi manual saat restore dari favorit
+    private String cachedAuthor;
+    private String cachedYear;
+    private String cachedGenre;
+    private String cachedCover;
+
     // ── Getters ──
 
     public String getKey() {
@@ -44,6 +50,7 @@ public class BookItem {
     }
 
     public String getAuthor() {
+        if (cachedAuthor != null && !cachedAuthor.isEmpty()) return cachedAuthor;
         if (authorName != null && !authorName.isEmpty()) {
             return authorName.get(0);
         }
@@ -51,10 +58,12 @@ public class BookItem {
     }
 
     public String getYear() {
+        if (cachedYear != null && !cachedYear.isEmpty()) return cachedYear;
         return firstPublishYear != null ? String.valueOf(firstPublishYear) : "";
     }
 
     public String getGenre() {
+        if (cachedGenre != null && !cachedGenre.isEmpty()) return cachedGenre;
         if (subject != null && !subject.isEmpty()) {
             // Ambil subjek pertama yang tidak terlalu panjang
             for (String s : subject) {
@@ -66,6 +75,7 @@ public class BookItem {
     }
 
     public String getCover() {
+        if (cachedCover != null && !cachedCover.isEmpty()) return cachedCover;
         if (coverId != null && coverId > 0) {
             // Open Library cover URL: https://covers.openlibrary.org/b/id/{cover_i}-M.jpg
             return "https://covers.openlibrary.org/b/id/" + coverId + "-M.jpg";
@@ -79,5 +89,19 @@ public class BookItem {
 
     public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
+    }
+
+    /**
+     * Helper untuk restore buku favorit dari SharedPreferences.
+     * Mengisi field-field yang biasanya diambil dari API.
+     */
+    public void setFavoriteFields(String key, String title, String author,
+                                  String year, String genre, String cover) {
+        this.key          = key;
+        this.title        = title;
+        this.cachedAuthor = author;
+        this.cachedYear   = year;
+        this.cachedGenre  = genre;
+        this.cachedCover  = cover;
     }
 }

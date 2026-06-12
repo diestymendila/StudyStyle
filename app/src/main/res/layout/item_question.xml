@@ -9,7 +9,7 @@
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="14dp"
     app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/background_card">
+    app:cardBackgroundColor="?attr/background_card">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:layout_marginBottom="14dp"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/text_primary_color"
             android:lineSpacingMultiplier="1.5" />
 
         <RadioGroup
@@ -55,7 +55,7 @@
                 android:layout_marginBottom="8dp"
                 android:padding="12dp"
                 android:textSize="13sp"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/text_primary_color"
                 android:lineSpacingMultiplier="1.4"
                 android:background="@drawable/bg_option"
                 android:buttonTint="@color/brand_primary" />
@@ -67,7 +67,7 @@
                 android:layout_marginBottom="8dp"
                 android:padding="12dp"
                 android:textSize="13sp"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/text_primary_color"
                 android:lineSpacingMultiplier="1.4"
                 android:background="@drawable/bg_option"
                 android:buttonTint="@color/brand_primary" />
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:padding="12dp"
                 android:textSize="13sp"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/text_primary_color"
                 android:lineSpacingMultiplier="1.4"
                 android:background="@drawable/bg_option"
                 android:buttonTint="@color/brand_primary" />

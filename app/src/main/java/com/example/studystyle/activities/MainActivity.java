@@ -2,10 +2,10 @@ package com.example.studystyle.activities;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.NavOptions;
@@ -39,18 +39,27 @@ public class MainActivity extends AppCompatActivity {
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
 
-            // Warna icon & teks bottom nav
+            // Warna icon & teks bottom nav (tema-aware: ikut dark/light theme)
+            TypedValue tvSelected = new TypedValue();
+            TypedValue tvUnselected = new TypedValue();
+            getTheme().resolveAttribute(com.google.android.material.R.attr.colorPrimary, tvSelected, true);
+            getTheme().resolveAttribute(R.attr.nav_unselected_color, tvUnselected, true);
+            int colorSelected   = tvSelected.data;
+            int colorUnselected = tvUnselected.data;
+
             int[][] states = new int[][]{
                     new int[]{android.R.attr.state_checked},
                     new int[]{-android.R.attr.state_checked}
             };
-            int[] colors = new int[]{
-                    ContextCompat.getColor(this, R.color.nav_selected),
-                    ContextCompat.getColor(this, R.color.nav_unselected)
-            };
+            int[] colors = new int[]{colorSelected, colorUnselected};
             ColorStateList csl = new ColorStateList(states, colors);
             bottomNav.setItemIconTintList(csl);
             bottomNav.setItemTextColor(csl);
+
+            // Set warna background bottom nav sesuai tema
+            TypedValue tvNavBg = new TypedValue();
+            getTheme().resolveAttribute(R.attr.nav_bg_color, tvNavBg, true);
+            bottomNav.setBackgroundColor(tvNavBg.data);
 
             // Hubungkan bottom nav dengan navController
             NavigationUI.setupWithNavController(bottomNav, navController);
@@ -73,11 +82,9 @@ public class MainActivity extends AppCompatActivity {
                                         .setPopUpTo(R.id.homeFragment, false)
                                         .setLaunchSingleTop(true)
                                         .build());
-                        // Update highlight ke tab Tes
                         bottomNav.post(() ->
                                 bottomNav.setSelectedItemId(R.id.testFragment));
                     } else {
-                        // Sudah pernah tes → tampilkan hasil
                         navController.navigate(R.id.resultFragment,
                                 null,
                                 new NavOptions.Builder()
@@ -88,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
-                // Tab Home, Tes, Profile — navigasi normal bersihkan back stack
+                // Home, Tes, Favorit, Profile — navigasi normal
                 navController.navigate(id,
                         null,
                         new NavOptions.Builder()
@@ -99,16 +106,15 @@ public class MainActivity extends AppCompatActivity {
             });
 
             // Sinkronisasi highlight tab saat destination berubah
-            // (misalnya saat btn_go_home ditekan dari ResultFragment)
             navController.addOnDestinationChangedListener(
                     (controller, destination, arguments) -> {
                         bottomNav.setVisibility(View.VISIBLE);
 
-                        // Update highlight tab sesuai destination saat ini
                         int destId = destination.getId();
                         if (destId == R.id.homeFragment
                                 || destId == R.id.testFragment
                                 || destId == R.id.resultFragment
+                                || destId == R.id.favoriteFragment
                                 || destId == R.id.profileFragment) {
                             if (bottomNav.getSelectedItemId() != destId) {
                                 bottomNav.setSelectedItemId(destId);

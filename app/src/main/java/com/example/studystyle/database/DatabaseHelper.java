@@ -19,6 +19,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static DatabaseHelper instance;
 
+    /**
+     * Singleton — satu instance dipakai sepanjang lifecycle app.
+     * JANGAN panggil db.close() di method manapun karena akan menutup
+     * koneksi yang dipakai bersama oleh semua thread.
+     */
     public static synchronized DatabaseHelper getInstance(Context context) {
         if (instance == null) {
             instance = new DatabaseHelper(context.getApplicationContext());
@@ -52,9 +57,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(UserEntry.COLUMN_EMAIL,    user.getEmail());
         values.put(UserEntry.COLUMN_PASSWORD, user.getPassword());
         values.put(UserEntry.COLUMN_JURUSAN,  user.getJurusan());
-        long id = db.insert(UserEntry.TABLE_NAME, null, values);
-        db.close();
-        return id;
+        // Tidak memanggil db.close() — singleton tidak boleh close
+        return db.insert(UserEntry.TABLE_NAME, null, values);
     }
 
     public User getUserByEmail(String email) {
@@ -64,20 +68,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 UserEntry.COLUMN_EMAIL + "=?", new String[]{email},
                 null, null, null);
 
+        User user = null;
         if (cursor != null && cursor.moveToFirst()) {
-            User user = new User();
+            user = new User();
             user.setId(cursor.getInt(cursor.getColumnIndexOrThrow(UserEntry._ID)));
             user.setName(cursor.getString(cursor.getColumnIndexOrThrow(UserEntry.COLUMN_NAME)));
             user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(UserEntry.COLUMN_EMAIL)));
             user.setPassword(cursor.getString(cursor.getColumnIndexOrThrow(UserEntry.COLUMN_PASSWORD)));
             user.setJurusan(cursor.getString(cursor.getColumnIndexOrThrow(UserEntry.COLUMN_JURUSAN)));
-            cursor.close();
-            db.close();
-            return user;
         }
         if (cursor != null) cursor.close();
-        db.close();
-        return null;
+        // Tidak db.close()
+        return user;
     }
 
     public boolean isEmailExists(String email) {
@@ -88,7 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null, null, null);
         boolean exists = cursor != null && cursor.moveToFirst();
         if (cursor != null) cursor.close();
-        db.close();
+        // Tidak db.close()
         return exists;
     }
 
@@ -100,7 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{email, password}, null, null, null);
         boolean valid = cursor != null && cursor.moveToFirst();
         if (cursor != null) cursor.close();
-        db.close();
+        // Tidak db.close()
         return valid;
     }
 
@@ -111,7 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(UserEntry.COLUMN_JURUSAN, jurusan);
         int rows = db.update(UserEntry.TABLE_NAME, values,
                 UserEntry._ID + "=?", new String[]{String.valueOf(userId)});
-        db.close();
+        // Tidak db.close()
         return rows > 0;
     }
 
@@ -120,15 +122,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public long insertResult(Result result) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(ResultEntry.COLUMN_USER_ID,    result.getUserId());
-        values.put(ResultEntry.COLUMN_VISUAL,     result.getVisualScore());
-        values.put(ResultEntry.COLUMN_AUDITORY,   result.getAuditoryScore());
-        values.put(ResultEntry.COLUMN_KINESTETIK, result.getKinestetikScore());
-        values.put(ResultEntry.COLUMN_RESULT_TYPE,result.getResultType());
-        values.put(ResultEntry.COLUMN_DATE,       result.getDate());
-        long id = db.insert(ResultEntry.TABLE_NAME, null, values);
-        db.close();
-        return id;
+        values.put(ResultEntry.COLUMN_USER_ID,     result.getUserId());
+        values.put(ResultEntry.COLUMN_VISUAL,      result.getVisualScore());
+        values.put(ResultEntry.COLUMN_AUDITORY,    result.getAuditoryScore());
+        values.put(ResultEntry.COLUMN_KINESTETIK,  result.getKinestetikScore());
+        values.put(ResultEntry.COLUMN_RESULT_TYPE, result.getResultType());
+        values.put(ResultEntry.COLUMN_DATE,        result.getDate());
+        // Tidak db.close()
+        return db.insert(ResultEntry.TABLE_NAME, null, values);
     }
 
     public List<Result> getResultsByUserId(int userId) {
@@ -139,8 +140,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ResultEntry.COLUMN_USER_ID + "=?", new String[]{String.valueOf(userId)},
                 null, null, ResultEntry.COLUMN_DATE + " DESC");
 
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
                 Result result = new Result();
                 result.setId(cursor.getInt(cursor.getColumnIndexOrThrow(ResultEntry._ID)));
                 result.setUserId(cursor.getInt(cursor.getColumnIndexOrThrow(ResultEntry.COLUMN_USER_ID)));
@@ -150,10 +151,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 result.setResultType(cursor.getString(cursor.getColumnIndexOrThrow(ResultEntry.COLUMN_RESULT_TYPE)));
                 result.setDate(cursor.getString(cursor.getColumnIndexOrThrow(ResultEntry.COLUMN_DATE)));
                 results.add(result);
-            } while (cursor.moveToNext());
+            }
             cursor.close();
         }
-        db.close();
+        // Tidak db.close()
         return results;
     }
 
@@ -164,8 +165,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ResultEntry.COLUMN_USER_ID + "=?", new String[]{String.valueOf(userId)},
                 null, null, ResultEntry.COLUMN_DATE + " DESC", "1");
 
+        Result result = null;
         if (cursor != null && cursor.moveToFirst()) {
-            Result result = new Result();
+            result = new Result();
             result.setId(cursor.getInt(cursor.getColumnIndexOrThrow(ResultEntry._ID)));
             result.setUserId(cursor.getInt(cursor.getColumnIndexOrThrow(ResultEntry.COLUMN_USER_ID)));
             result.setVisualScore(cursor.getInt(cursor.getColumnIndexOrThrow(ResultEntry.COLUMN_VISUAL)));
@@ -173,12 +175,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             result.setKinestetikScore(cursor.getInt(cursor.getColumnIndexOrThrow(ResultEntry.COLUMN_KINESTETIK)));
             result.setResultType(cursor.getString(cursor.getColumnIndexOrThrow(ResultEntry.COLUMN_RESULT_TYPE)));
             result.setDate(cursor.getString(cursor.getColumnIndexOrThrow(ResultEntry.COLUMN_DATE)));
-            cursor.close();
-            db.close();
-            return result;
         }
         if (cursor != null) cursor.close();
-        db.close();
-        return null;
+        // Tidak db.close()
+        return result;
     }
 }

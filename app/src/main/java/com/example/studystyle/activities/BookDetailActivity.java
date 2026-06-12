@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,13 +34,18 @@ import retrofit2.Response;
 public class BookDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_BOOK_JSON  = "extra_book_json";
-    /** Key untuk intent result: book key dan rating yang baru disimpan */
     public static final String EXTRA_BOOK_KEY   = "extra_book_key";
     public static final String EXTRA_NEW_RATING = "extra_new_rating";
 
     private int currentRating = 0;
     private TextView[] stars;
     private String bookKey = "";
+    private BookItem book;
+    private PreferenceManager prefs;
+
+    // Favorite
+    private Button btnFavoriteBook;
+    private boolean isFavorited = false;
 
     // Review
     private final List<String> reviewList = new ArrayList<>();
@@ -53,20 +59,21 @@ public class BookDetailActivity extends AppCompatActivity {
 
         String bookJson = getIntent().getStringExtra(EXTRA_BOOK_JSON);
         if (bookJson == null) { finish(); return; }
-        BookItem book = new Gson().fromJson(bookJson, BookItem.class);
+        book = new Gson().fromJson(bookJson, BookItem.class);
         bookKey = book.getKey();
 
         ImageButton btnBack          = findViewById(R.id.btn_back);
-        ImageView ivCover            = findViewById(R.id.iv_detail_cover);
-        TextView tvTitle             = findViewById(R.id.tv_detail_title);
-        TextView tvAuthor            = findViewById(R.id.tv_detail_author);
-        TextView tvYear              = findViewById(R.id.tv_detail_year);
-        TextView tvGenre             = findViewById(R.id.tv_detail_genre);
+        ImageView   ivCover          = findViewById(R.id.iv_detail_cover);
+        TextView    tvTitle          = findViewById(R.id.tv_detail_title);
+        TextView    tvAuthor         = findViewById(R.id.tv_detail_author);
+        TextView    tvYear           = findViewById(R.id.tv_detail_year);
+        TextView    tvGenre          = findViewById(R.id.tv_detail_genre);
         ProgressBar progressSynopsis = findViewById(R.id.progress_synopsis);
-        TextView tvSynopsis          = findViewById(R.id.tv_detail_synopsis);
-        TextView tvNoSynopsis        = findViewById(R.id.tv_detail_no_synopsis);
+        TextView    tvSynopsis       = findViewById(R.id.tv_detail_synopsis);
+        TextView    tvNoSynopsis     = findViewById(R.id.tv_detail_no_synopsis);
         layoutReviewsContainer       = findViewById(R.id.layout_reviews_container);
         tvReviewsLabel               = findViewById(R.id.tv_reviews_label);
+        btnFavoriteBook              = findViewById(R.id.btn_favorite_book);
 
         stars = new TextView[]{
                 findViewById(R.id.star_1),
@@ -76,14 +83,15 @@ public class BookDetailActivity extends AppCompatActivity {
                 findViewById(R.id.star_5)
         };
 
-        PreferenceManager prefs = new PreferenceManager(this);
+        prefs = new PreferenceManager(this);
         String userName = prefs.getUserName();
         if (userName == null || userName.trim().isEmpty()) userName = "Pengguna";
 
         // Isi data buku
         tvTitle.setText(book.getTitle());
         tvAuthor.setText("oleh " + book.getAuthor());
-        tvYear.setText(book.getYear().isEmpty() ? "" : "Tahun: " + book.getYear());
+        String year = book.getYear();
+        tvYear.setText(year.isEmpty() ? "" : "Tahun: " + year);
         tvGenre.setText(book.getGenre().isEmpty() ? "Education" : book.getGenre());
 
         if (!book.getCover().isEmpty()) {
@@ -133,7 +141,25 @@ public class BookDetailActivity extends AppCompatActivity {
             tvNoSynopsis.setVisibility(View.VISIBLE);
         }
 
-        // Tampilkan rating tersimpan (jika ada)
+        // Tampilkan status favorit
+        isFavorited = prefs.isBookFavorited(bookKey);
+        updateFavoriteButton();
+
+        // Tombol favorit
+        btnFavoriteBook.setOnClickListener(v -> {
+            if (isFavorited) {
+                prefs.removeFavoriteBook(bookKey);
+                isFavorited = false;
+                Toast.makeText(this, "Dihapus dari favorit", Toast.LENGTH_SHORT).show();
+            } else {
+                prefs.addFavoriteBook(book);
+                isFavorited = true;
+                Toast.makeText(this, "Ditambahkan ke favorit ❤", Toast.LENGTH_SHORT).show();
+            }
+            updateFavoriteButton();
+        });
+
+        // Tampilkan rating tersimpan
         int savedRating = prefs.getBookRating(bookKey);
         if (savedRating > 0) {
             applyStarColors(savedRating);
@@ -142,10 +168,10 @@ public class BookDetailActivity extends AppCompatActivity {
             tvHint.setText(savedRating + " dari 5 bintang");
         }
 
-        // Back → kembalikan result ke Fragment pemanggil agar adapter bisa refresh
+        // Back
         btnBack.setOnClickListener(v -> finishWithResult());
 
-        // Klik bintang: simpan rating otomatis & perbarui tampilan
+        // Klik bintang
         for (int i = 0; i < stars.length; i++) {
             final int starIndex = i + 1;
             stars[i].setOnClickListener(v -> {
@@ -160,7 +186,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
         // Submit review
         final String finalUserName = userName;
-        android.widget.Button btnSubmitReview = findViewById(R.id.btn_submit_review);
+        Button btnSubmitReview = findViewById(R.id.btn_submit_review);
         btnSubmitReview.setOnClickListener(v -> {
             com.google.android.material.textfield.TextInputEditText etReview =
                     findViewById(R.id.et_review);
@@ -181,7 +207,23 @@ public class BookDetailActivity extends AppCompatActivity {
         finishWithResult();
     }
 
-    /** Kirim rating terbaru ke Fragment pemanggil sebelum Activity ditutup. */
+    private void updateFavoriteButton() {
+        if (isFavorited) {
+            btnFavoriteBook.setText("❤  Tersimpan di Favorit");
+            btnFavoriteBook.setBackgroundTintList(
+                    ContextCompat.getColorStateList(this, R.color.brand_primary));
+            btnFavoriteBook.setTextColor(
+                    ContextCompat.getColor(this, R.color.white));
+        } else {
+            btnFavoriteBook.setText("❤  Tambahkan ke Favorit");
+            // Kembalikan ke style ButtonSecondary (outline)
+            btnFavoriteBook.setBackgroundTintList(
+                    ContextCompat.getColorStateList(this, android.R.color.transparent));
+            btnFavoriteBook.setTextColor(
+                    ContextCompat.getColor(this, R.color.brand_primary));
+        }
+    }
+
     private void finishWithResult() {
         Intent result = new Intent();
         result.putExtra(EXTRA_BOOK_KEY, bookKey);
@@ -216,14 +258,12 @@ public class BookDetailActivity extends AppCompatActivity {
         cardView.setCardBackgroundColor(
                 ContextCompat.getColor(this, R.color.brand_accent));
 
-        // Outer: horizontal — teks kiri, tombol hapus kanan
         LinearLayout outer = new LinearLayout(this);
         outer.setOrientation(LinearLayout.HORIZONTAL);
         outer.setGravity(android.view.Gravity.CENTER_VERTICAL);
         int pad = dpToPx(14);
         outer.setPadding(pad, pad, dpToPx(8), pad);
 
-        // Kolom kiri: nama + isi review
         LinearLayout inner = new LinearLayout(this);
         inner.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams innerParams = new LinearLayout.LayoutParams(
@@ -251,7 +291,6 @@ public class BookDetailActivity extends AppCompatActivity {
         inner.addView(tvAuthorName);
         inner.addView(tvReviewContent);
 
-        // Tombol hapus — ikon tempat sampah (🗑) di kanan
         TextView btnDelete = new TextView(this);
         btnDelete.setText("🗑");
         btnDelete.setTextSize(18f);
@@ -262,16 +301,13 @@ public class BookDetailActivity extends AppCompatActivity {
         deleteParams.setMarginStart(dpToPx(8));
         btnDelete.setLayoutParams(deleteParams);
         btnDelete.setPadding(dpToPx(6), dpToPx(6), dpToPx(6), dpToPx(6));
-        // Ripple effect
         android.util.TypedValue ripple = new android.util.TypedValue();
         getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, ripple, true);
         btnDelete.setBackgroundResource(ripple.resourceId);
 
-        // Aksi hapus: hilangkan card dari container & dari list
         btnDelete.setOnClickListener(v -> {
             reviewList.remove(reviewText);
             layoutReviewsContainer.removeView(cardView);
-            // Sembunyikan label jika tidak ada review tersisa
             if (reviewList.isEmpty()) {
                 tvReviewsLabel.setVisibility(View.GONE);
             }

@@ -177,6 +177,33 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp" />
 
+        <!-- ── Tombol Tambahkan ke Favorit ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="4dp">
+
+            <Button
+                android:id="@+id/btn_favorite_book"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="❤  Tambahkan ke Favorit"
+                style="@style/ButtonSecondary" />
+
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/divider_color"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="16dp" />
+
         <!-- Beri Rating -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -335,7 +362,6 @@
             android:paddingTop="16dp"
             android:paddingBottom="32dp">
 
-            <!-- Label "Semua Review" — tersembunyi jika belum ada review -->
             <TextView
                 android:id="@+id/tv_reviews_label"
                 android:layout_width="wrap_content"
@@ -347,7 +373,6 @@
                 android:layout_marginBottom="12dp"
                 android:visibility="gone" />
 
-            <!-- Container review ditambahkan secara programatik -->
             <LinearLayout
                 android:id="@+id/layout_reviews_container"
                 android:layout_width="match_parent"
